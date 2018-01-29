@@ -6,7 +6,7 @@
 
 Normalize GraphQL responses for persisting in the client cache/state.
 
-> Not related, in any way, to [normalizr](https://github.com/paularmstrong/normalizr), just shamelessly piggybacking on it's popularity. Alos, "normaliz**E**r" is taken...
+> Not related, in any way, to [normalizr](https://github.com/paularmstrong/normalizr), just shamelessly piggybacking on it's popularity. Also, "normaliz**E**r" is taken...
 
 **TL;DR**: Transforms:
 
