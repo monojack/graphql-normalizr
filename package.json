@@ -43,7 +43,7 @@
     "graphql": "^0.11.* || ^0.12.*"
   },
   "scripts": {
-    "dev": "npm run build:cjs -- -w",
+    "dev": "npm run build:es -- -w",
     "pretest": "npm run build:cjs",
     "test": "ava --verbose --serial",
     "build:es": "babel src --out-dir es",
