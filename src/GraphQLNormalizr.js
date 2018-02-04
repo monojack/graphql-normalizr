@@ -6,9 +6,7 @@ const CACHE_READ_ERROR = `[GraphQLNormalizr]: Could not read from cache`
 const CACHE_WRITE_ERROR = `[GraphQLNormalizr]: Could not write to cache`
 
 const buildNoTypenameError = node =>
-  `[GraphQLNormalizr]: No "__typename" field found on node ${JSON.stringify(
-    node
-  )}`
+  `[GraphQLNormalizr]: No "__typename" field found on node ${JSON.stringify(node)}`
 
 const { map, prop, isArray, isObject, } = require('./utils')
 
@@ -54,10 +52,6 @@ module.exports = function GraphQLNormalizr ({
   const typeNameField = createField('__typename')
 
   const cache = new Map()
-  const paths = {}
-  const entities = {}
-  const stack = {}
-  let normalized
 
   function mapNestedValue (obj) {
     const object = { ...obj, }
@@ -73,7 +67,7 @@ module.exports = function GraphQLNormalizr ({
     }, {})
   }
 
-  function assoc (entity, value) {
+  function assoc (entity, value, normalized) {
     if (isNil(entity)) throw new Error(buildNoTypenameError(value))
     const id = value[idKey]
 
@@ -88,7 +82,11 @@ module.exports = function GraphQLNormalizr ({
   }
 
   function normalize ({ data, }) {
-    normalized = {}
+    const paths = {}
+    const entities = {}
+    const stack = {}
+    let normalized = {}
+
     try {
       let cached
       caching && (cached = cache.get(JSON.stringify(data)))
@@ -105,8 +103,7 @@ module.exports = function GraphQLNormalizr ({
         if (typeof value === 'object') {
           const type = value.__typename
           type &&
-            (entities[type] =
-              typeMap[type] || entities[type] || pluralize(type).toLowerCase())
+            (entities[type] = typeMap[type] || entities[type] || pluralize(type).toLowerCase())
 
           stack.value = value
           stack.entity = entities[type]
@@ -114,7 +111,7 @@ module.exports = function GraphQLNormalizr ({
           visit({ ...value, }, `${path ? `${path}.` : ``}${key}`)
         } else {
           if (!paths[path]) {
-            assoc(stack.entity, mapNestedValue(stack.value))
+            assoc(stack.entity, mapNestedValue(stack.value), normalized)
             paths[path] = { done: true, }
           }
         }
@@ -139,8 +136,7 @@ module.exports = function GraphQLNormalizr ({
         if (parent.kind === Kind.OPERATION_DEFINITION) return
 
         !hasIdField(node.selections) && node.selections.unshift(idField)
-        !hasTypeNameField(node.selections) &&
-          node.selections.unshift(typeNameField)
+        !hasTypeNameField(node.selections) && node.selections.unshift(typeNameField)
 
         return node
       },
