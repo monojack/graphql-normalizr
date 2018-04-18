@@ -131,7 +131,7 @@ The **GraphQLNormalizr** constructor function returns an object containing 3 met
 2. [addRequiredFields](#addrequiredfields)
 3. [normalize](#normalize)
 
-Depending on how you write your queries, you may or may not use `parse` or `addRequiredFields`, but `normalize` is the method that you will transform the graphql response. As you've probably seen from the **TL;DR**, all response nodes must contain the `__typename` and `id` fields. `__typename` is a [graphql meta field](http://graphql.org/learn/queries/#meta-fields) and the `id` key may be customized when creating the GraphQLNormalizr client.
+Depending on how you write your queries, you may or may not use `parse` or `addRequiredFields`, but `normalize` is the method that you will transform the GraphQL response. As you've probably seen from the **TL;DR**, all response nodes must contain the `__typename` and `id` fields. `__typename` is a [GraphQL meta field](http://graphql.org/learn/queries/#meta-fields) and the `id` key may be customized when creating the GraphQLNormalizr client.
 
 If your queries already ask for `id` and `__typename` there's no need to use **parse** or **addRequiredFields**. Otherwise, **parse** will take care of transforming your `GraphQL source` into a `Document` and add the `__typename` and `id` fields where needed. In case you already use a different parser, or only have access to the `Document` you may use **addRequiredFields** on the `Document` to add the `__typename` and `id` fields
 
@@ -225,7 +225,7 @@ normalize(response)
 
 > Boolean
 
-Deafaul is `false`. All the data is stored in key/value pairs, for easy access. If you want to use arrays, for whatever reason, set this to `true`
+Default is `false`. All the data is stored in key/value pairs, for easy access. If you want to use arrays, for whatever reason, set this to `true`
 
 For the same response object in our previous example:
 
