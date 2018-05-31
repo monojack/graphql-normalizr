@@ -1,6 +1,6 @@
 const pluralize = require('pluralize')
 const { visit, parse: gql, Kind, } = require('graphql')
-const { isNil, } = require('./utils')
+const { map, prop, isNil, isArray, isObject, } = require('./utils')
 
 const CACHE_READ_ERROR = `[GraphQLNormalizr]: Could not read from cache`
 const CACHE_WRITE_ERROR = `[GraphQLNormalizr]: Could not write to cache`
@@ -8,7 +8,6 @@ const CACHE_WRITE_ERROR = `[GraphQLNormalizr]: Could not write to cache`
 const buildNoTypenameError = node =>
   `[GraphQLNormalizr]: No "__typename" field found on node ${JSON.stringify(node)}`
 
-const { map, prop, isArray, isObject, } = require('./utils')
 
 function hasField (name) {
   return set => set.some(({ name: { value, }, }) => value === name)
@@ -100,7 +99,7 @@ module.exports = function GraphQLNormalizr ({
 
     ;(function visit (root, path = '') {
       for (const [ key, value, ] of Object.entries(root)) {
-        if (typeof value === 'object') {
+        if (isObject(value) || isArray(value)) {
           const type = value.__typename
           type &&
             (entities[type] = typeMap[type] || entities[type] || pluralize(type).toLowerCase())
