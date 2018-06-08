@@ -17,30 +17,25 @@
   "main": "lib/index.js",
   "module": "es/index.js",
   "dependencies": {
-    "pluralize": "7.0.0"
+    "pluralize": "^7.0.0"
   },
   "devDependencies": {
-    "ava": "0.25.0",
-    "babel-cli": "6.26.0",
-    "babel-plugin-transform-es2015-modules-commonjs": "6.26.0",
-    "babel-plugin-transform-object-rest-spread": "6.26.0",
-    "babel-preset-es2015": "6.24.1",
-    "babel-preset-stage-0": "6.24.1",
-    "eslint": "4.16.0",
-    "eslint-config-mono": "1.3.0",
-    "eslint-config-standard": "11.0.0-beta.0",
-    "eslint-plugin-import": "2.8.0",
-    "eslint-plugin-node": "5.2.1",
-    "eslint-plugin-promise": "3.6.0",
-    "eslint-plugin-standard": "3.0.1",
-    "graphql": "0.12.3",
-    "graphql-tag": "2.6.1"
+    "ava": "^0.25.0",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^4.19.1",
+    "eslint-config-mono": "^2.0.0",
+    "graphql": "^14.0.0-rc.1",
+    "graphql-tag": "^2.9.2"
   },
   "bugs": {
     "url": "https://github.com/monojack/graphql-normalizr/issues"
   },
   "peerDependencies": {
-    "graphql": "^0.11.* || ^0.12.*"
+    "graphql": "^0.11.* || ^0.12.* || ^14.*"
   },
   "scripts": {
     "dev": "npm run build:es -- -w",
