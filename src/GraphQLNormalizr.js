@@ -1,7 +1,7 @@
 import pluralize from 'pluralize'
 import { visit, } from 'graphql/language/visitor'
 import { parse as gql, } from 'graphql/language/parser'
-import { Kind, } from 'graphql/language/kinds'
+import { Kind, } from 'graphql/language'
 
 import { hasField, createField, toLists, buildNoTypenameError, } from './helpers'
 import {
