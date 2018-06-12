@@ -101,7 +101,7 @@ export function GraphQLNormalizr ({
       process.env.NODE_ENV !== 'production' && console.warn(CACHE_READ_ERROR)
     }
 
-    ;(function visit (root, path = '') {
+    ;(function walk (root, path = '') {
       for (const [ key, value, ] of Object.entries(root)) {
         if (isObject(value) || isArray(value)) {
           const type = value.__typename
@@ -110,7 +110,7 @@ export function GraphQLNormalizr ({
           stack.value = value
           stack.entity = entities[type]
 
-          visit({ ...value, }, `${path ? `${path}.` : ``}${key}`)
+          walk(value, `${path ? `${path}.` : ``}${key}`)
         } else {
           if (!paths[path]) {
             assoc(stack.entity, mapNestedValue(stack.value), normalized)
