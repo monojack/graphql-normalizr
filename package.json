@@ -29,14 +29,14 @@
     "babel-preset-stage-0": "^6.24.1",
     "eslint": "^4.19.1",
     "eslint-config-mono": "^2.0.0",
-    "graphql": "^14.0.0-rc.1",
+    "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2"
   },
   "bugs": {
     "url": "https://github.com/monojack/graphql-normalizr/issues"
   },
   "peerDependencies": {
-    "graphql": "^0.11.* || ^0.12.* || ^14.*"
+    "graphql": "^0.11.* || ^0.12.* || ^0.13.*"
   },
   "scripts": {
     "dev": "npm run build:es -- -w",
