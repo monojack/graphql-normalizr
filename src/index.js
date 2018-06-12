@@ -1,3 +1,1 @@
-module.exports = {
-  GraphQLNormalizr: require('./GraphQLNormalizr'),
-}
+export { GraphQLNormalizr, } from './GraphQLNormalizr'

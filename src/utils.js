@@ -1,10 +1,10 @@
 import { camelize, decamelize, pascalize, } from 'humps'
 
-function typeOf (value) {
+export function typeOf (value) {
   return Object.prototype.toString.call(value).slice(8, -1)
 }
 
-function isType (type) {
+export function isType (type) {
   return function (value) {
     if (value === null) return type.toLowerCase() === 'null'
     if (typeof value === 'undefined') return type.toLowerCase() === 'undefined'
@@ -13,15 +13,15 @@ function isType (type) {
   }
 }
 
-function isArray (value) {
+export function isArray (value) {
   return isType('array')(value)
 }
 
-function isObject (value) {
+export function isObject (value) {
   return isType('object')(value)
 }
 
-function isEmpty (value) {
+export function isEmpty (value) {
   if (typeof value === 'string') return !value
   if (isType('object', value)) return !Object.values(value).length
   if (isType('array', value)) return !value.length
@@ -30,11 +30,11 @@ function isEmpty (value) {
   return false
 }
 
-function isNil (value) {
+export function isNil (value) {
   return value == null
 }
 
-function prop (path) {
+export function prop (path) {
   return function (obj) {
     return path.split('.').reduce((acc, curr) => {
       try {
@@ -46,13 +46,13 @@ function prop (path) {
   }
 }
 
-function map (transform) {
+export function map (transform) {
   return function (list) {
     return list.map(transform)
   }
 }
 
-function mapObject (transform) {
+export function mapObject (transform) {
   return function (obj) {
     return Object.entries(obj).reduce(
       (acc, [ key, value, ]) => ({
@@ -64,36 +64,18 @@ function mapObject (transform) {
   }
 }
 
-function toLower (str) {
+export function toLower (str) {
   return str.toLowerCase()
 }
 
-function toUpper (str) {
+export function toUpper (str) {
   return str.toUpperCase()
 }
 
-const toCamel = camelize
-const toSnake = decamelize
-const toPascal = pascalize
+export const toCamel = camelize
+export const toSnake = decamelize
+export const toPascal = pascalize
 
-function toKebab (str) {
+export function toKebab (str) {
   return decamelize(str).replace(/_/g, '-')
-}
-
-module.exports = {
-  isArray,
-  isEmpty,
-  isNil,
-  isObject,
-  isType,
-  map,
-  mapObject,
-  prop,
-  toCamel,
-  toKebab,
-  toLower,
-  toPascal,
-  toSnake,
-  toUpper,
-  typeOf,
 }

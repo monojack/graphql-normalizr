@@ -1,6 +1,8 @@
-const pluralize = require('pluralize')
-const { visit, parse: gql, Kind, } = require('graphql')
-const {
+import pluralize from 'pluralize'
+import { visit, parse as gql, Kind, } from 'graphql'
+
+import { hasField, createField, toLists, buildNoTypenameError, } from './helpers'
+import {
   map,
   prop,
   isNil,
@@ -12,43 +14,8 @@ const {
   toSnake,
   toPascal,
   toKebab,
-} = require('./utils')
-
-const CACHE_READ_ERROR = `[GraphQLNormalizr]: Could not read from cache`
-const CACHE_WRITE_ERROR = `[GraphQLNormalizr]: Could not write to cache`
-
-const buildNoTypenameError = node =>
-  `[GraphQLNormalizr]: No "__typename" field found on node ${JSON.stringify(
-    node
-  )}`
-
-function hasField (name) {
-  return set => set.some(({ name: { value, }, }) => value === name)
-}
-
-function createField (name) {
-  return {
-    kind: 'Field',
-    alias: undefined,
-    name: {
-      kind: 'Name',
-      value: name,
-    },
-    arguments: [],
-    directives: [],
-    selectionSet: undefined,
-  }
-}
-
-function toLists (object = {}) {
-  return Object.entries(object).reduce(
-    (acc, [ key, value, ]) => ({
-      ...acc,
-      [key]: Object.values(value),
-    }),
-    {}
-  )
-}
+} from './utils'
+import { CACHE_READ_ERROR, CACHE_WRITE_ERROR, } from './constants'
 
 const casingMethodMap = {
   lower: toLower,
@@ -59,7 +26,7 @@ const casingMethodMap = {
   snake: toSnake,
 }
 
-module.exports = function GraphQLNormalizr ({
+export function GraphQLNormalizr ({
   idKey = 'id',
   typeMap = {},
   caching = false,
