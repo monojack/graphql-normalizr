@@ -17,6 +17,7 @@
   "main": "lib/index.js",
   "module": "es/index.js",
   "dependencies": {
+    "humps": "^2.0.1",
     "pluralize": "^7.0.0"
   },
   "devDependencies": {

@@ -6,12 +6,12 @@ const customIdKey = {
       email: 'Madisen_Braun@hotmail.com',
       posts: [
         {
-          __typename: 'Post',
+          __typename: 'BlogPost',
           _id: '5a6cf127c2b20834f6551483',
           title: 'Aut aut reiciendis',
         },
         {
-          __typename: 'Post',
+          __typename: 'BlogPost',
           _id: '5a6cf127c2b20834f6551485',
           title: 'Nesciunt esse',
         },
@@ -23,12 +23,12 @@ const customIdKey = {
       email: 'Robel.Ansel@yahoo.com',
       posts: [
         {
-          __typename: 'Post',
+          __typename: 'BlogPost',
           _id: '5a6cf127c2b20834f6551484',
           title: 'Sunt ut aut',
         },
         {
-          __typename: 'Post',
+          __typename: 'BlogPost',
           _id: '5a6cf127c2b20834f6551486',
           title: 'Nihil assumenda',
         },
@@ -87,24 +87,24 @@ const noNested = {
       email: 'Robel.Ansel@yahoo.com',
     },
   ],
-  allPosts: [
+  allBlogPosts: [
     {
-      __typename: 'Post',
+      __typename: 'BlogPost',
       id: '5a6cf127c2b20834f6551483',
       likes: 0,
     },
     {
-      __typename: 'Post',
+      __typename: 'BlogPost',
       id: '5a6cf127c2b20834f6551484',
       likes: 10,
     },
     {
-      __typename: 'Post',
+      __typename: 'BlogPost',
       id: '5a6cf127c2b20834f6551485',
       likes: 23,
     },
     {
-      __typename: 'Post',
+      __typename: 'BlogPost',
       id: '5a6cf127c2b20834f6551486',
       likes: 3,
     },
@@ -161,12 +161,12 @@ const nested = {
       email: 'Madisen_Braun@hotmail.com',
       posts: [
         {
-          __typename: 'Post',
+          __typename: 'BlogPost',
           id: '5a6cf127c2b20834f6551483',
           title: 'Aut aut reiciendis',
         },
         {
-          __typename: 'Post',
+          __typename: 'BlogPost',
           id: '5a6cf127c2b20834f6551485',
           title: 'Nesciunt esse',
         },
@@ -178,21 +178,21 @@ const nested = {
       email: 'Robel.Ansel@yahoo.com',
       posts: [
         {
-          __typename: 'Post',
+          __typename: 'BlogPost',
           id: '5a6cf127c2b20834f6551484',
           title: 'Sunt ut aut',
         },
         {
-          __typename: 'Post',
+          __typename: 'BlogPost',
           id: '5a6cf127c2b20834f6551486',
           title: 'Nihil assumenda',
         },
       ],
     },
   ],
-  allPosts: [
+  allBlogPosts: [
     {
-      __typename: 'Post',
+      __typename: 'BlogPost',
       id: '5a6cf127c2b20834f6551483',
       likes: 0,
       comments: [
@@ -204,7 +204,7 @@ const nested = {
       ],
     },
     {
-      __typename: 'Post',
+      __typename: 'BlogPost',
       id: '5a6cf127c2b20834f6551484',
       likes: 10,
       comments: [
@@ -226,7 +226,7 @@ const nested = {
       ],
     },
     {
-      __typename: 'Post',
+      __typename: 'BlogPost',
       id: '5a6cf127c2b20834f6551485',
       likes: 23,
       comments: [
@@ -243,7 +243,7 @@ const nested = {
       ],
     },
     {
-      __typename: 'Post',
+      __typename: 'BlogPost',
       id: '5a6cf127c2b20834f6551486',
       likes: 3,
       comments: [
@@ -270,12 +270,12 @@ const listAndObject = {
       email: 'Madisen_Braun@hotmail.com',
       posts: [
         {
-          __typename: 'Post',
+          __typename: 'BlogPost',
           id: '5a6cf127c2b20834f6551483',
           title: 'Aut aut reiciendis',
         },
         {
-          __typename: 'Post',
+          __typename: 'BlogPost',
           id: '5a6cf127c2b20834f6551485',
           title: 'Nesciunt esse',
         },
@@ -287,12 +287,12 @@ const listAndObject = {
       email: 'Robel.Ansel@yahoo.com',
       posts: [
         {
-          __typename: 'Post',
+          __typename: 'BlogPost',
           id: '5a6cf127c2b20834f6551484',
           title: 'Sunt ut aut',
         },
         {
-          __typename: 'Post',
+          __typename: 'BlogPost',
           id: '5a6cf127c2b20834f6551486',
           title: 'Nihil assumenda',
         },

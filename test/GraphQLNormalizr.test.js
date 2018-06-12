@@ -71,6 +71,55 @@ test('snapshot :: `normalize` with typenames', t => {
   t.snapshot(normalize({ data: listAndObject, }))
 })
 
+test('snapshot :: `normalize` with `{ plural: false }`', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    plural: false,
+  })
+  t.snapshot(normalize({ data: listAndObject, }))
+})
+
+test('snapshot :: `normalize` with `{ casing: "lower" }`', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    casing: 'lower',
+  })
+  t.snapshot(normalize({ data: listAndObject, }))
+})
+
+test('snapshot :: `normalize` with `{ casing: "upper" }`', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    casing: 'upper',
+  })
+  t.snapshot(normalize({ data: listAndObject, }))
+})
+
+test('snapshot :: `normalize` with `{ casing: "camel" }`', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    casing: 'camel',
+  })
+  t.snapshot(normalize({ data: listAndObject, }))
+})
+
+test('snapshot :: `normalize` with `{ casing: "pascal" }`', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    casing: 'pascal',
+  })
+  t.snapshot(normalize({ data: listAndObject, }))
+})
+
+test('snapshot :: `normalize` with `{ casing: "kebab" }`', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    casing: 'kebab',
+  })
+  t.snapshot(normalize({ data: listAndObject, }))
+})
+
+test('snapshot :: `normalize` with `{ casing: "snake" }`', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    casing: 'snake',
+  })
+  t.snapshot(normalize({ data: listAndObject, }))
+})
+
 test('`normalize` with cache', t => {
   let normalize
 

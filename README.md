@@ -20,7 +20,7 @@ Normalize GraphQL responses for persisting in the client cache/state.
         "email": "Lloyd.Nikolaus@yahoo.com",
         "posts": [
           {
-            "__typename": "Post",
+            "__typename": "BlogPost",
             "id": "5a6efb94b0e8c36f99fba016",
             "title": "Dolorem voluptatem molestiae",
             "comments": [
@@ -78,7 +78,7 @@ into:
         "Possimus beatae vero recusandae beatae quas ut commodi laboriosam."
     }
   },
-  "posts": {
+  "blogPosts": {
     "5a6efb94b0e8c36f99fba016": {
       "id": "5a6efb94b0e8c36f99fba016",
       "title": "Dolorem voluptatem molestiae",
@@ -116,6 +116,7 @@ Yes, everything is all great when the response mirrors the exact structure we as
   * [`parse`](#parse)
   * [`addRequiredFields`](#addrequiredfields)
   * [`normalize`](#normalize)
+* [Migrating from 1.x to 2.x](#migrating)
 
 ## Installation
 
@@ -127,9 +128,9 @@ npm install graphql-normalizr
 
 The **GraphQLNormalizr** constructor function returns an object containing 3 methods:
 
-1. [parse](#parse)
-2. [addRequiredFields](#addrequiredfields)
-3. [normalize](#normalize)
+1.  [parse](#parse)
+2.  [addRequiredFields](#addrequiredfields)
+3.  [normalize](#normalize)
 
 Depending on how you write your queries, you may or may not use `parse` or `addRequiredFields`, but `normalize` is the method that you will transform the GraphQL response. As you've probably seen from the **TL;DR**, all response nodes must contain the `__typename` and `id` fields. `__typename` is a [GraphQL meta field](http://graphql.org/learn/queries/#meta-fields) and the `id` key may be customized when creating the GraphQLNormalizr client.
 
@@ -151,6 +152,8 @@ const normalizer = new GraphQLNormalizr(config)
 * [lists](#lists)
 * [typenames](#typenames)
 * [caching](#caching)
+* [plural](#plural)
+* [casing](#casing)
 
 ##### idKey
 
@@ -193,7 +196,7 @@ normalize(response)
 
 > Object
 
-By default, **graphql-normalizr** uses [pluralize](https://www.npmjs.com/package/pluralize) to compute entity names, so a `User` type will be stored under the `users` key. Use this to provide different mapping rules between **Types** and **entity** names.
+By default **the entity name will be the plural form of the type name, converted to camel case**, _(`PrimaryAddress` type will be stored under the `primaryAddresses` key)_. Use this option to provide specific **entity** names for some/all **Types**, or try the [plural](#plural) and [casing](#casing) options to derive the entity names.
 
 ```js
 const response = {
@@ -220,6 +223,56 @@ normalize(response)
 //  }
 // }
 ```
+
+##### plural
+
+> Boolean
+
+Default is `true`. Set this to `false` if you don't want to [pluralize](https://github.com/blakeembrey/pluralize) entity names. Considering the previous response example:
+
+```js
+const { normalize } = new GraphQLNormalizr({
+  plural: false,
+})
+normalize(response)
+// =>
+// {
+//  user: {
+//    '5a6efb94b0e8c36f99fba013' : {
+//      id: '5a6efb94b0e8c36f99fba013',
+//      email: 'Lloyd.Nikolaus@yahoo.com'
+//    }
+//  }
+// }
+```
+
+##### casing
+
+> 'lower'|'upper'|'camel'|'pascal'|'snake'|'kebab'
+
+You can also specify the preferred casing for entity names. Again, consider the above response example.
+
+```js
+// casing: 'lower'
+// User => user
+
+// casing: 'upper'
+// User => USER
+
+// casing: 'camel'
+// PrimaryAddress => primaryAddress
+
+// casing: 'pascal'
+// PrimaryAddress => PrimaryAddress
+
+// casing: 'snake'
+// PrimaryAddress => primary_address
+
+// casing: 'kebab'
+// PrimaryAddress => primary-address
+```
+
+Combine `plural` and `casing` options to get the desired entity names
 
 ##### lists
 
@@ -385,4 +438,23 @@ fetch({ query }).then(response => {
   const normalized = normalize(response)
   // persist the normalized data to our app state.
 }).catch(...)
+```
+
+## Migrating
+
+**from _v1.x_ to _v2.x_**
+
+There aren't many breaking changes between v1.x and v2.x. In fact, there's only one and it's about how **Type** names get converted into **entity** names.
+
+With the default configuration, v1.x will transfrom a `PrimaryAddress` type name into `primaryaddresses` entity name. With 2.x, the default configuiration will transform `PrimaryAddress` to `primaryAddresses`. The only difference is that now, it changes to _camelcase_ instead of _lowercase_
+
+If you don't want to change your code everywhere you are accessing entities, you can configure the way **GraphQLNormalizr** makes the transformation with the [plural](#plural) and [casing](#casing) options:
+
+```js
+const { normalize } = new GraphQLNormalizr({
+  plural: true, // true is the default value, so you can omit this
+  casing: 'lower',
+})
+
+// this above configuration will change `PrimaryAddress` to `primaryaddresses`
 ```

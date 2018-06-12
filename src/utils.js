@@ -1,3 +1,5 @@
+import { camelize, decamelize, pascalize, } from 'humps'
+
 function typeOf (value) {
   return Object.prototype.toString.call(value).slice(8, -1)
 }
@@ -62,6 +64,22 @@ function mapObject (transform) {
   }
 }
 
+function toLower (str) {
+  return str.toLowerCase()
+}
+
+function toUpper (str) {
+  return str.toUpperCase()
+}
+
+const toCamel = camelize
+const toSnake = decamelize
+const toPascal = pascalize
+
+function toKebab (str) {
+  return decamelize(str).replace(/_/g, '-')
+}
+
 module.exports = {
   isArray,
   isEmpty,
@@ -71,5 +89,11 @@ module.exports = {
   map,
   mapObject,
   prop,
+  toCamel,
+  toKebab,
+  toLower,
+  toPascal,
+  toSnake,
+  toUpper,
   typeOf,
 }

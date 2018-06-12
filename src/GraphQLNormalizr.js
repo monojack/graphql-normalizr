@@ -1,13 +1,26 @@
 const pluralize = require('pluralize')
 const { visit, parse: gql, Kind, } = require('graphql')
-const { map, prop, isNil, isArray, isObject, } = require('./utils')
+const {
+  map,
+  prop,
+  isNil,
+  isArray,
+  isObject,
+  toLower,
+  toUpper,
+  toCamel,
+  toSnake,
+  toPascal,
+  toKebab,
+} = require('./utils')
 
 const CACHE_READ_ERROR = `[GraphQLNormalizr]: Could not read from cache`
 const CACHE_WRITE_ERROR = `[GraphQLNormalizr]: Could not write to cache`
 
 const buildNoTypenameError = node =>
-  `[GraphQLNormalizr]: No "__typename" field found on node ${JSON.stringify(node)}`
-
+  `[GraphQLNormalizr]: No "__typename" field found on node ${JSON.stringify(
+    node
+  )}`
 
 function hasField (name) {
   return set => set.some(({ name: { value, }, }) => value === name)
@@ -37,12 +50,23 @@ function toLists (object = {}) {
   )
 }
 
+const casingMethodMap = {
+  lower: toLower,
+  upper: toUpper,
+  kebab: toKebab,
+  camel: toCamel,
+  pascal: toPascal,
+  snake: toSnake,
+}
+
 module.exports = function GraphQLNormalizr ({
   idKey = 'id',
   typeMap = {},
   caching = false,
   lists = false,
   typenames = false,
+  plural = true,
+  casing = 'camel',
 } = {}) {
   const hasIdField = hasField(idKey)
   const hasTypeNameField = hasField('__typename')
@@ -51,6 +75,17 @@ module.exports = function GraphQLNormalizr ({
   const typeNameField = createField('__typename')
 
   const cache = new Map()
+
+  function caseTransform (type) {
+    let str = type
+    str = plural ? pluralize(str) : str
+    str = casingMethodMap[casing](str)
+    return str
+  }
+
+  function getEntityName (type, entities) {
+    return typeMap[type] || entities[type] || caseTransform(type)
+  }
 
   function mapNestedValue (obj) {
     const object = { ...obj, }
@@ -101,8 +136,7 @@ module.exports = function GraphQLNormalizr ({
       for (const [ key, value, ] of Object.entries(root)) {
         if (isObject(value) || isArray(value)) {
           const type = value.__typename
-          type &&
-            (entities[type] = typeMap[type] || entities[type] || pluralize(type).toLowerCase())
+          type && (entities[type] = getEntityName(type, entities))
 
           stack.value = value
           stack.entity = entities[type]
@@ -135,7 +169,8 @@ module.exports = function GraphQLNormalizr ({
         if (parent.kind === Kind.OPERATION_DEFINITION) return
 
         !hasIdField(node.selections) && node.selections.unshift(idField)
-        !hasTypeNameField(node.selections) && node.selections.unshift(typeNameField)
+        !hasTypeNameField(node.selections) &&
+          node.selections.unshift(typeNameField)
 
         return node
       },
