@@ -66,7 +66,7 @@ export function GraphQLNormalizr ({
         ...acc,
         [key]: isObject(value)
           ? prop(idKey)(value)
-          : isArray(value) ? map(prop(idKey))(value) : value,
+          : (isArray(value) && !value.every(isScalar)) ? map(prop(idKey))(value) : value,
       }
     }, {})
   }
@@ -104,9 +104,7 @@ export function GraphQLNormalizr ({
 
     ;(function walk (root, path = '') {
       for (const [ key, value, ] of Object.entries(root)) {
-        if (isArray(root) && root.every(isScalar)) {
-          continue
-        } else if (isObject(value) || isArray(value)) {
+        if (isObject(value) || (isArray(value) && !value.every(isScalar))) {
           const type = value.__typename
           type && (entities[type] = getEntityName(type, entities))
 
