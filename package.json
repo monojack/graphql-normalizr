@@ -1,5 +1,5 @@
 {
-  "name": "graphql-normalizr",
+  "name": "mab-graphql-normalizr",
   "version": "2.1.2",
   "description": "Normalize GraphQL response",
   "repository": {
