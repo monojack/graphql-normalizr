@@ -16,6 +16,7 @@ import {
   toSnake,
   toPascal,
   toKebab,
+  isScalar,
 } from './utils'
 import { CACHE_READ_ERROR, CACHE_WRITE_ERROR, } from './constants'
 
@@ -103,7 +104,9 @@ export function GraphQLNormalizr ({
 
     ;(function walk (root, path = '') {
       for (const [ key, value, ] of Object.entries(root)) {
-        if (isObject(value) || isArray(value)) {
+        if (isArray(root) && root.every(isScalar)) {
+          continue
+        } else if (isObject(value) || isArray(value)) {
           const type = value.__typename
           type && (entities[type] = getEntityName(type, entities))
 
