@@ -79,3 +79,7 @@ export const toPascal = pascalize
 export function toKebab (str) {
   return decamelize(str).replace(/_/g, '-')
 }
+
+export function isScalar (value) {
+  return (!isObject(value) && !isNil(value))
+}
