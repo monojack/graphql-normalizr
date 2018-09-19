@@ -10,6 +10,7 @@ const {
   nested,
   noNested,
   noTypeNames,
+  withScalarArrays,
 } = require('./mocks/data')
 
 test('GraphQLNormalizr returns an object with `normalize`, `parse` and `addRequiredFields` methdos', t => {
@@ -69,6 +70,13 @@ test('snapshot :: `normalize` with typenames', t => {
     typenames: true,
   })
   t.snapshot(normalize({ data: listAndObject, }))
+})
+
+test('snapshot :: `normalize` with scalar arrays', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    typenames: true,
+  })
+  t.snapshot(normalize({ data: withScalarArrays, }))
 })
 
 test('snapshot :: `normalize` with `{ plural: false }`', t => {
@@ -154,9 +162,7 @@ test('`parse` adds the required ["id", "__typename"] fields', t => {
   let bool = false
   visit(documentAST, {
     SelectionSet (node, parent) {
-      bool = node.selections.some(s =>
-        [ 'id', '__typename', ].includes(s.name.value)
-      )
+      bool = node.selections.some(s => [ 'id', '__typename', ].includes(s.name.value))
     },
   })
   t.false(bool)
@@ -166,9 +172,7 @@ test('`parse` adds the required ["id", "__typename"] fields', t => {
   documentAST = parse(query)
   visit(documentAST, {
     SelectionSet (node, parent) {
-      bool = node.selections.some(s =>
-        [ 'id', '__typename', ].includes(s.name.value)
-      )
+      bool = node.selections.some(s => [ 'id', '__typename', ].includes(s.name.value))
     },
   })
   t.true(bool)

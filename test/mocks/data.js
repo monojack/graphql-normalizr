@@ -306,6 +306,41 @@ const listAndObject = {
   },
 }
 
+const withScalarArrays = {
+  allBlogPosts: [
+    {
+      __typename: 'BlogPost',
+      id: '5a6cf127c2b20834f6551483',
+      likes: 0,
+      comments: [
+        {
+          __typename: 'Comment',
+          id: '5a6cf127c2b20834f655148e',
+          message: 'Voluptates aut eum.',
+        },
+      ],
+      tags: [ 'tags', 'are', 'boring', ],
+    },
+    {
+      __typename: 'BlogPost',
+      id: '5a6cf127c2b20834f6551485',
+      likes: 23,
+      comments: [
+        {
+          __typename: 'Comment',
+          id: '5a6cf127c2b20834f655148b',
+          message: 'Consectetur cum est odit et qui.',
+        },
+        {
+          __typename: 'Comment',
+          id: '5a6cf127c2b20834f655148d',
+          message: 'Aut vel possimus nisi qui.',
+        },
+      ],
+    },
+  ],
+}
+
 module.exports = {
   customIdKey,
   listAndObject,
@@ -313,4 +348,5 @@ module.exports = {
   nested,
   noNested,
   noTypeNames,
+  withScalarArrays,
 }
