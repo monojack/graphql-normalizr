@@ -1,6 +1,6 @@
 {
   "name": "graphql-normalizr",
-  "version": "2.1.3",
+  "version": "2.2.0",
   "description": "Normalize GraphQL response",
   "repository": {
     "type": "git",
