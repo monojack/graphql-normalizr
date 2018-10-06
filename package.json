@@ -29,13 +29,7 @@
     "eslint": "5.6.1",
     "eslint-config-mono": "2.0.0",
     "graphql": "14.0.2",
-    "graphql-tag": "2.10.0",
-    "rollup": "0.66.4",
-    "rollup-plugin-babel": "4.0.3",
-    "rollup-plugin-node-resolve": "3.4.0",
-    "rollup-plugin-replace": "2.0.0",
-    "rollup-plugin-size-snapshot": "0.7.0",
-    "rollup-plugin-uglify": "6.0.0"
+    "graphql-tag": "2.10.0"
   },
   "bugs": {
     "url": "https://github.com/monojack/graphql-normalizr/issues"
