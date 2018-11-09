@@ -4,13 +4,16 @@ const gql = require('graphql-tag')
 
 const { GraphQLNormalizr, } = require('../')
 const {
+  allUsersConnections,
   customIdKey,
   listAndObject,
+  listAndObjectConnections,
   mergeTestData,
   nested,
   noNested,
   noTypeNames,
   withScalarArrays,
+  withScalarArraysConnections,
 } = require('./mocks/data')
 
 test('GraphQLNormalizr returns an object with `normalize`, `parse` and `addRequiredFields` methdos', t => {
@@ -24,6 +27,11 @@ test('GraphQLNormalizr returns an object with `normalize`, `parse` and `addRequi
 test('`normalize` throws if a node has no `__typename` field', t => {
   const { normalize, } = new GraphQLNormalizr()
   t.throws(() => normalize({ data: noTypeNames, }))
+})
+
+test('`normalize` throws if `useConnections` is false and has `pageInfo` field', t => {
+  const { normalize, } = new GraphQLNormalizr()
+  t.throws(() => normalize({ data: allUsersConnections, }))
 })
 
 test('snapshot :: `normalize` simple, not nested data', t => {
@@ -53,7 +61,7 @@ test('snapshot :: `normalize` with custom "id" key', t => {
 
 test('snapshot :: `normalize` with custom entity names', t => {
   const { normalize, } = new GraphQLNormalizr({
-    typeMap: { User: 'accounts', Post: 'stories', Comment: 'messages', },
+    typeMap: { User: 'accounts', BlogPost: 'stories', Comment: 'messages', },
   })
   t.snapshot(normalize({ data: listAndObject, }))
 })
@@ -77,6 +85,50 @@ test('snapshot :: `normalize` with scalar arrays', t => {
     typenames: true,
   })
   t.snapshot(normalize({ data: withScalarArrays, }))
+})
+
+test('snapshot :: `normalize` with graphql connections', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+  })
+  t.snapshot(normalize({ data: allUsersConnections, }))
+})
+
+test('snapshot :: `normalize` with graphql connections and scalar arrays', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+  })
+  t.snapshot(normalize({ data: withScalarArraysConnections, }))
+})
+
+test('snapshot :: `normalize` with graphql connections and custom entity names', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+    typeMap: { User: 'accounts', BlogPost: 'stories', Comment: 'messages', },
+  })
+  t.snapshot(normalize({ data: listAndObjectConnections, }))
+})
+
+test('snapshot :: `normalize` without graphql connections but `useConnections` flag set to true', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+  })
+  t.snapshot(normalize({ data: listAndObject, }))
+})
+
+test('snapshot :: `normalize` without graphql connections but `useConnections` flag set to true and scalar array', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+  })
+  t.snapshot(normalize({ data: withScalarArrays, }))
+})
+
+test('snapshot :: `normalize` without graphql connections but `useConnections` flag set to true and custom entity names', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+    typeMap: { User: 'accounts', BlogPost: 'stories', Comment: 'messages', },
+  })
+  t.snapshot(normalize({ data: listAndObject, }))
 })
 
 test('snapshot :: `normalize` with `{ plural: false }`', t => {
@@ -162,7 +214,9 @@ test('`parse` adds the required ["id", "__typename"] fields', t => {
   let bool = false
   visit(documentAST, {
     SelectionSet (node, parent) {
-      bool = node.selections.some(s => [ 'id', '__typename', ].includes(s.name.value))
+      bool = node.selections.some(s =>
+        [ 'id', '__typename', ].includes(s.name.value)
+      )
     },
   })
   t.false(bool)
@@ -172,7 +226,9 @@ test('`parse` adds the required ["id", "__typename"] fields', t => {
   documentAST = parse(query)
   visit(documentAST, {
     SelectionSet (node, parent) {
-      bool = node.selections.some(s => [ 'id', '__typename', ].includes(s.name.value))
+      bool = node.selections.some(s =>
+        [ 'id', '__typename', ].includes(s.name.value)
+      )
     },
   })
   t.true(bool)
