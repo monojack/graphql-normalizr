@@ -42,6 +42,106 @@ const customIdKey = {
   },
 }
 
+const typeWithSameTypeFieldsConnections = {
+  findUser: {
+    __typename: 'User',
+    id: '5a6efb94b0e8c36f99fba013',
+    email: 'Lloyd.Nikolaus@yahoo.com',
+    referredBy: {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551481',
+      email: 'Madisen_Braun@hotmail.com',
+    },
+    friends: {
+      __typename: 'FriendsConnection',
+      totalCount: 3,
+      edges: [
+        {
+          node: {
+            __typename: 'User',
+            id: '5a6cf127c2b20834f6551481',
+            email: 'Madisen_Braun@hotmail.com',
+          },
+          cursor: 'Y3Vyc29yMg==',
+        },
+        {
+          node: {
+            __typename: 'User',
+            id: '5a6cf127c2b20834f6551482',
+            email: 'Robel.Ansel@yahoo.com',
+          },
+          cursor: 'Y3Vyc29yMw==',
+        },
+      ],
+      pageInfo: {
+        endCursor: 'Y3Vyc29yMw==',
+        hasNextPage: false,
+      },
+    },
+  },
+}
+
+const allUsersConnections = {
+  allUsers: [
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551481',
+      email: 'Madisen_Braun@hotmail.com',
+      posts: {
+        __typename: 'PostsConnection',
+        pageInfo: {
+          endCursor: 'Y3Vyc29yMw==',
+          hasNextPage: false,
+        },
+        edges: [
+          {
+            node: {
+              __typename: 'BlogPost',
+              id: '5a6cf127c2b20834f6551483',
+              title: 'Aut aut reiciendis',
+            },
+          },
+          {
+            node: {
+              __typename: 'BlogPost',
+              id: '5a6cf127c2b20834f6551485',
+              title: 'Nesciunt esse',
+            },
+          },
+        ],
+      },
+    },
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551482',
+      email: 'Robel.Ansel@yahoo.com',
+      posts: {
+        __typename: 'PostsConnection',
+        pageInfo: {
+          endCursor: 'Y3Vyc29yMw==',
+          hasNextPage: true,
+        },
+        edges: [
+          {
+            node: {
+              __typename: 'BlogPost',
+              id: '5a6cf127c2b20834f6551484',
+              title: 'Sunt ut aut',
+            },
+          },
+          {
+            node: {
+              __typename: 'BlogPost',
+              id: '5a6cf127c2b20834f6551486',
+              title: 'Nihil assumenda',
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+
 const mergeTestData = {
   allComments: [
     {
@@ -306,6 +406,62 @@ const listAndObject = {
   },
 }
 
+const listAndObjectConnections = {
+  allUsers: [
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551481',
+      email: 'Madisen_Braun@hotmail.com',
+      posts: {
+        edges: [
+          {
+            node: {
+              __typename: 'BlogPost',
+              id: '5a6cf127c2b20834f6551483',
+              title: 'Aut aut reiciendis',
+            },
+          },
+          {
+            node: {
+              __typename: 'BlogPost',
+              id: '5a6cf127c2b20834f6551485',
+              title: 'Nesciunt esse',
+            },
+          },
+        ],
+      },
+    },
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551482',
+      email: 'Robel.Ansel@yahoo.com',
+      posts: {
+        edges: [
+          {
+            node: {
+              __typename: 'BlogPost',
+              id: '5a6cf127c2b20834f6551484',
+              title: 'Sunt ut aut',
+            },
+          },
+          {
+            node: {
+              __typename: 'BlogPost',
+              id: '5a6cf127c2b20834f6551486',
+              title: 'Nihil assumenda',
+            },
+          },
+        ],
+      },
+    },
+  ],
+  findComment: {
+    __typename: 'Comment',
+    id: '5a6cf127c2b20834f655148a',
+    message: 'Voluptates ex sint amet repellendus impedit nam.',
+  },
+}
+
 const withScalarArrays = {
   allBlogPosts: [
     {
@@ -341,12 +497,61 @@ const withScalarArrays = {
   ],
 }
 
+const withScalarArraysConnections = {
+  allBlogPosts: [
+    {
+      __typename: 'BlogPost',
+      id: '5a6cf127c2b20834f6551483',
+      likes: 0,
+      comments: {
+        edges: [
+          {
+            node: {
+              __typename: 'Comment',
+              id: '5a6cf127c2b20834f655148e',
+              message: 'Voluptates aut eum.',
+            },
+          },
+        ],
+      },
+      tags: [ 'tags', 'are', 'boring', ],
+    },
+    {
+      __typename: 'BlogPost',
+      id: '5a6cf127c2b20834f6551485',
+      likes: 23,
+      comments: {
+        edges: [
+          {
+            node: {
+              __typename: 'Comment',
+              id: '5a6cf127c2b20834f655148b',
+              message: 'Consectetur cum est odit et qui.',
+            },
+          },
+          {
+            node: {
+              __typename: 'Comment',
+              id: '5a6cf127c2b20834f655148d',
+              message: 'Aut vel possimus nisi qui.',
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+
 module.exports = {
+  typeWithSameTypeFieldsConnections,
+  allUsersConnections,
   customIdKey,
   listAndObject,
+  listAndObjectConnections,
   mergeTestData,
   nested,
   noNested,
   noTypeNames,
   withScalarArrays,
+  withScalarArraysConnections,
 }

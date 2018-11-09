@@ -18,7 +18,11 @@ import {
   toPascal,
   toKebab,
 } from './utils'
-import { CACHE_READ_ERROR, CACHE_WRITE_ERROR, } from './constants'
+import {
+  CACHE_READ_ERROR,
+  CACHE_WRITE_ERROR,
+  PAGEINFO_WITH_USE_CONNECTIONS_FALSE,
+} from './constants'
 
 const casingMethodMap = {
   lower: toLower,
@@ -37,6 +41,7 @@ export function GraphQLNormalizr ({
   typenames = false,
   plural = true,
   casing = 'camel',
+  useConnections = false,
 } = {}) {
   const hasIdField = hasField(idKey)
   const hasTypeNameField = hasField('__typename')
@@ -61,16 +66,19 @@ export function GraphQLNormalizr ({
     const object = { ...obj, }
     !typenames && delete object.__typename
 
-    return Object.entries(object).reduce((acc, [ key, value, ]) => {
+    const res = Object.entries(object).reduce((acc, [ key, value, ]) => {
       return {
         ...acc,
         [key]: isObject(value)
-          ? prop(idKey)(value)
+          ? useConnections && value.hasOwnProperty('edges')
+            ? value.edges.map(prop(`node.${idKey}`))
+            : prop(idKey)(value)
           : isArray(value) && !value.every(isScalar)
             ? map(prop(idKey))(value)
             : value,
       }
     }, {})
+    return res
   }
 
   function assoc (entity, value, normalized) {
@@ -104,9 +112,23 @@ export function GraphQLNormalizr ({
       process.env.NODE_ENV !== 'production' && console.warn(CACHE_READ_ERROR)
     }
 
+    let warned = false
     ;(function walk (root, path = '') {
+      if (root && root.hasOwnProperty('pageInfo') && !useConnections) {
+        process.env.NODE_ENV !== 'production' &&
+          !warned &&
+          // eslint-disable-next-line
+          console.warn(PAGEINFO_WITH_USE_CONNECTIONS_FALSE)
+        warned = true
+      }
+
       for (const [ key, value, ] of Object.entries(root)) {
-        if (isObject(value) || (isArray(value) && !value.every(isScalar))) {
+        if (useConnections && value.hasOwnProperty('edges')) {
+          walk(value.edges, `${path ? `${path}.` : ``}${key}.edges`)
+        } else if (
+          isObject(value) ||
+          (isArray(value) && !value.every(isScalar))
+        ) {
           const type = value.__typename
           type && (entities[type] = getEntityName(type, entities))
 
@@ -130,7 +152,7 @@ export function GraphQLNormalizr ({
       process.env.NODE_ENV !== 'production' && console.warn(CACHE_WRITE_ERROR)
     }
 
-    normalized = lists ? toLists(normalized) : normalized || {}
+    normalized = lists ? toLists(normalized) : normalized
 
     return normalized
   }
@@ -141,7 +163,8 @@ export function GraphQLNormalizr ({
         if (parent.kind === Kind.OPERATION_DEFINITION) return
 
         !hasIdField(node.selections) && node.selections.unshift(idField)
-        !hasTypeNameField(node.selections) && node.selections.unshift(typeNameField)
+        !hasTypeNameField(node.selections) &&
+          node.selections.unshift(typeNameField)
 
         return node
       },

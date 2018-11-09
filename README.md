@@ -104,19 +104,19 @@ into:
 
 We all love **GraphQL** and we want to use it. There are tons of libraries and clients out there that help us do that with ease, but there is still one problem... How do you persist that data?
 
-Yes, everything is all great when the response mirrors the exact structure we asked for, but we don't want to cache it that way, do we? We probably want a normalized version of that data which we can persist to our store and read/modify it efficiently. Flux or Redux stores work best with normalized data and there are also GraphQL clients you can use to execute queries on the local cache/state ([blips](https://github.com/monojack/blips), [artemis](#https://github.com/monojack/artemis-client) or [apollo-link-state](https://github.com/apollographql/apollo-link-state)), in which case, we definitely need to persist normalized data.
+Yes, everything is all great when the response mirrors the exact structure we asked for, but we don't want to cache it that way, do we? We probably want a normalized version of that data which we can persist to our store and read/modify it efficiently. Flux or Redux stores work best with normalized data and there are also GraphQL clients you can use to execute queries on the local cache/state ([blips](https://github.com/monojack/blips) or [apollo-link-state](https://github.com/apollographql/apollo-link-state)), in which case, we definitely need to persist normalized data.
 
 **GraphQLNormalizr** is simple, fast, light-weight and it provides all the tools needed to do just that, the only requirement is that you include the `id` and `__typename` fields for all the nodes _(but it can do that for you if you're too lazy or you want to keep your sources thin)_.
 
 ## Table of contents
 
-* [Installation](#installation)
-* [API by example](#api-by-example)
-  * [`GraphQLNormalizr`](#graphqlnormalizr)
-  * [`parse`](#parse)
-  * [`addRequiredFields`](#addrequiredfields)
-  * [`normalize`](#normalize)
-* [Migrating from 1.x to 2.x](#migrating)
+- [Installation](#installation)
+- [API by example](#api-by-example)
+  - [`GraphQLNormalizr`](#graphqlnormalizr)
+  - [`parse`](#parse)
+  - [`addRequiredFields`](#addrequiredfields)
+  - [`normalize`](#normalize)
+- [Migrating from 1.x to 2.x](#migrating)
 
 ## Installation
 
@@ -147,13 +147,14 @@ const normalizer = new GraphQLNormalizr(config)
 
 **config**: optional - the configuration object containing information for instantiating the client. it takes the following props:
 
-* [idKey](#idkey)
-* [typeMap](#typemap)
-* [lists](#lists)
-* [typenames](#typenames)
-* [caching](#caching)
-* [plural](#plural)
-* [casing](#casing)
+- [idKey](#idkey)
+- [useConnections](#useconnections)
+- [typeMap](#typemap)
+- [lists](#lists)
+- [typenames](#typenames)
+- [caching](#caching)
+- [plural](#plural)
+- [casing](#casing)
 
 ##### idKey
 
@@ -189,6 +190,76 @@ normalize(response)
 //      email: 'Lloyd.Nikolaus@yahoo.com'
 //    }
 //  }
+// }
+```
+
+##### useConnections
+
+> Boolean
+
+Default is `false`. If you are using GraphQL connections with `edges` and `nodes`, set this flag to **`true`** otherwise you'll get a warning and the normalization won't work.
+
+**NOTE**: _The connections implementation needs to be according to the [specification](https://facebook.github.io/relay/graphql/connections.htm)_
+
+```js
+const response = {
+  data: {
+    findUser: {
+      __typename: 'User',
+      id: '5a6efb94b0e8c36f99fba013',
+      email: 'Lloyd.Nikolaus@yahoo.com',
+      friends: {
+        __typename: 'FriendsConnection',
+        totalCount: 3,
+        edges: [
+          {
+            node: {
+              __typename: 'User',
+              id: '5a6cf127c2b20834f6551481',
+              email: 'Madisen_Braun@hotmail.com',
+            },
+            cursor: 'Y3Vyc29yMg==',
+          },
+          {
+            node: {
+              __typename: 'User',
+              id: '5a6cf127c2b20834f6551482',
+              email: 'Robel.Ansel@yahoo.com',
+            },
+            cursor: 'Y3Vyc29yMw==',
+          },
+        ],
+        pageInfo: {
+          endCursor: 'Y3Vyc29yMw==',
+          hasNextPage: false,
+        },
+      },
+    },
+  },
+}
+
+const { normalize } = new GraphQLNormalizr({
+  useConnections: true,
+})
+
+normalize(response)
+// =>
+// {
+//   users: {
+//     '5a6efb94b0e8c36f99fba013': {
+//       id: '5a6efb94b0e8c36f99fba013',
+//       email: 'Lloyd.Nikolaus@yahoo.com',
+//       friends: ['5a6cf127c2b20834f6551481', '5a6cf127c2b20834f6551482'],
+//     },
+//     '5a6cf127c2b20834f6551481': {
+//       id: '5a6cf127c2b20834f6551481',
+//       email: 'Madisen_Braun@hotmail.com',
+//     },
+//     '5a6cf127c2b20834f6551482': {
+//       id: '5a6cf127c2b20834f6551482',
+//       email: 'Robel.Ansel@yahoo.com',
+//     },
+//   },
 // }
 ```
 
@@ -289,7 +360,7 @@ const { normalize } = new GraphQLNormalizr({
 normalize(response)
 // =>
 // {
-//  accounts: [
+//  users: [
 //    {
 //      id: '5a6efb94b0e8c36f99fba013',
 //      email: 'Lloyd.Nikolaus@yahoo.com'
@@ -312,7 +383,7 @@ const { normalize } = new GraphQLNormalizr({
 normalize(response)
 // =>
 // {
-//  accounts: {
+//  users: {
 //    '5a6efb94b0e8c36f99fba013' : {
 //      __typename: 'User',
 //      id: '5a6efb94b0e8c36f99fba013',
