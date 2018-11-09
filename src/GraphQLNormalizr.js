@@ -113,41 +113,37 @@ export function GraphQLNormalizr ({
     }
 
     let warned = false
-    try {
-      ;(function walk (root, path = '') {
-        if (root && root.hasOwnProperty('pageInfo') && !useConnections) {
-          process.env.NODE_ENV !== 'production' &&
-            !warned &&
-            // eslint-disable-next-line
-            console.warn(PAGEINFO_WITH_USE_CONNECTIONS_FALSE)
-          warned = true
-        }
+    ;(function walk (root, path = '') {
+      if (root && root.hasOwnProperty('pageInfo') && !useConnections) {
+        process.env.NODE_ENV !== 'production' &&
+          !warned &&
+          // eslint-disable-next-line
+          console.warn(PAGEINFO_WITH_USE_CONNECTIONS_FALSE)
+        warned = true
+      }
 
-        for (const [ key, value, ] of Object.entries(root)) {
-          if (useConnections && value.hasOwnProperty('edges')) {
-            walk(value.edges, `${path ? `${path}.` : ``}${key}.edges`)
-          } else if (
-            isObject(value) ||
-            (isArray(value) && !value.every(isScalar))
-          ) {
-            const type = value.__typename
-            type && (entities[type] = getEntityName(type, entities))
+      for (const [ key, value, ] of Object.entries(root)) {
+        if (useConnections && value.hasOwnProperty('edges')) {
+          walk(value.edges, `${path ? `${path}.` : ``}${key}.edges`)
+        } else if (
+          isObject(value) ||
+          (isArray(value) && !value.every(isScalar))
+        ) {
+          const type = value.__typename
+          type && (entities[type] = getEntityName(type, entities))
 
-            stack.value = value
-            stack.entity = entities[type]
+          stack.value = value
+          stack.entity = entities[type]
 
-            walk(value, `${path ? `${path}.` : ``}${key}`)
-          } else {
-            if (!paths[path]) {
-              assoc(stack.entity, mapNestedValue(stack.value), normalized)
-              paths[path] = { done: true, }
-            }
+          walk(value, `${path ? `${path}.` : ``}${key}`)
+        } else {
+          if (!paths[path]) {
+            assoc(stack.entity, mapNestedValue(stack.value), normalized)
+            paths[path] = { done: true, }
           }
         }
-      })(data)
-    } catch (e) {
-      if (!warned) throw e
-    }
+      }
+    })(data)
 
     try {
       caching && cache.set(JSON.stringify(data), normalized)
