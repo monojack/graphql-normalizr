@@ -14,6 +14,7 @@ const {
   noTypeNames,
   withScalarArrays,
   withScalarArraysConnections,
+  typeWithSameTypeFieldsConnections,
 } = require('./mocks/data')
 
 test('GraphQLNormalizr returns an object with `normalize`, `parse` and `addRequiredFields` methdos', t => {
@@ -92,6 +93,13 @@ test('snapshot :: `normalize` with graphql connections', t => {
     useConnections: true,
   })
   t.snapshot(normalize({ data: allUsersConnections, }))
+})
+
+test('snapshot :: `normalize` with graphql connections and type with same type fields', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+  })
+  t.snapshot(normalize({ data: typeWithSameTypeFieldsConnections, }))
 })
 
 test('snapshot :: `normalize` with graphql connections and scalar arrays', t => {

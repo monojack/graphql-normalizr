@@ -42,6 +42,45 @@ const customIdKey = {
   },
 }
 
+const typeWithSameTypeFieldsConnections = {
+  findUser: {
+    __typename: 'User',
+    id: '5a6efb94b0e8c36f99fba013',
+    email: 'Lloyd.Nikolaus@yahoo.com',
+    referredBy: {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551481',
+      email: 'Madisen_Braun@hotmail.com',
+    },
+    friends: {
+      __typename: 'FriendsConnection',
+      totalCount: 3,
+      edges: [
+        {
+          node: {
+            __typename: 'User',
+            id: '5a6cf127c2b20834f6551481',
+            email: 'Madisen_Braun@hotmail.com',
+          },
+          cursor: 'Y3Vyc29yMg==',
+        },
+        {
+          node: {
+            __typename: 'User',
+            id: '5a6cf127c2b20834f6551482',
+            email: 'Robel.Ansel@yahoo.com',
+          },
+          cursor: 'Y3Vyc29yMw==',
+        },
+      ],
+      pageInfo: {
+        endCursor: 'Y3Vyc29yMw==',
+        hasNextPage: false,
+      },
+    },
+  },
+}
+
 const allUsersConnections = {
   allUsers: [
     {
@@ -504,6 +543,7 @@ const withScalarArraysConnections = {
 }
 
 module.exports = {
+  typeWithSameTypeFieldsConnections,
   allUsersConnections,
   customIdKey,
   listAndObject,
