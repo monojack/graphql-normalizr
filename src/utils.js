@@ -1,4 +1,4 @@
-import { camelize, decamelize, pascalize, } from 'humps'
+import { camelize, decamelize, pascalize, } from './humps'
 
 export function typeOf (value) {
   return Object.prototype.toString.call(value).slice(8, -1)
