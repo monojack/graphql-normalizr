@@ -254,7 +254,7 @@ function replace (word, rule) {
  * @param  {Array}    rules
  * @return {string}
  */
-function sanitizeWord (token, word, rules) {
+function sanitizeWord (token, word, rules, uncountables) {
   let sanitized = word
   // Empty string or doesn't need fixing.
   if (!token.length || uncountables.hasOwnProperty(token)) {
@@ -271,34 +271,14 @@ function sanitizeWord (token, word, rules) {
   return sanitized
 }
 
-/**
- * Replace a word with the updated word.
- *
- * @param  {Object}   replaceMap
- * @param  {Object}   keepMap
- * @param  {Array}    rules
- * @return {Function}
- */
-function replaceWord (map, rules) {
-  return function (word) {
-    // Get the correct token and case restoration functions.
-    var token = word.toLowerCase()
-    // Check against the keep object map.
-    if (map.hasOwnProperty(token)) {
-      return restoreCase(word, map[token])
-    }
-
-    // Run all the rules against the word.
-    return sanitizeWord(token, word, rules)
+export const pluralize = word => {
+  // Get the correct token and case restoration functions.
+  var token = word.toLowerCase()
+  // Check against the keep object map.
+  if (irregularPlurals.hasOwnProperty(token)) {
+    return restoreCase(word, irregularPlurals[token])
   }
-}
 
-/**
- * Pluralize or singularize a word based on the passed in count.
- *
- * @param  {string}  word
- * @param  {number}  count
- * @param  {boolean} inclusive
- * @return {string}
- */
-export const pluralize = replaceWord(irregularPlurals, pluralRules)
+  // Run all the rules against the word.
+  return sanitizeWord(token, word, pluralRules, uncountables)
+}
