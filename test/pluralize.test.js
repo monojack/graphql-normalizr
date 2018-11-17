@@ -1,5 +1,5 @@
 const test = require('ava')
-const { pluralize, } = require('../lib/pluralize')
+const { pluralize, } = require('../')
 
 const irregularPlurals = {
   addendum: [ 'addenda', ],

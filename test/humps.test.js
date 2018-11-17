@@ -1,5 +1,5 @@
 const test = require('ava')
-const { camelize, decamelize, pascalize, } = require('../lib/humps')
+const { camelize, decamelize, pascalize, } = require('../')
 
 const camelizeTests = {
   foobar: 'foobar',

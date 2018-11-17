@@ -34,6 +34,7 @@ bower_components
 # Dist
 dist
 es
+esm
 lib
 
 # Dependency directories
