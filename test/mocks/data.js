@@ -462,6 +462,64 @@ const listAndObjectConnections = {
   },
 }
 
+const listAndObjectConnectionsWithNullNodes = {
+  allUsers: [
+    null,
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551481',
+      email: 'Madisen_Braun@hotmail.com',
+      posts: {
+        edges: [
+          {
+            node: {
+              __typename: 'BlogPost',
+              id: '5a6cf127c2b20834f6551483',
+              title: 'Aut aut reiciendis',
+            },
+          },
+          {
+            node: {
+              __typename: 'BlogPost',
+              id: '5a6cf127c2b20834f6551485',
+              title: 'Nesciunt esse',
+            },
+          },
+        ],
+      },
+    },
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551482',
+      email: 'Robel.Ansel@yahoo.com',
+      posts: {
+        edges: [
+          {
+            node: {
+              __typename: 'BlogPost',
+              id: '5a6cf127c2b20834f6551484',
+              title: 'Sunt ut aut',
+            },
+          },
+          null,
+          {
+            node: {
+              __typename: 'BlogPost',
+              id: '5a6cf127c2b20834f6551486',
+              title: 'Nihil assumenda',
+            },
+          },
+        ],
+      },
+    },
+  ],
+  findComment: {
+    __typename: 'Comment',
+    id: '5a6cf127c2b20834f655148a',
+    message: 'Voluptates ex sint amet repellendus impedit nam.',
+  },
+}
+
 const withScalarArrays = {
   allBlogPosts: [
     {
@@ -548,6 +606,7 @@ module.exports = {
   customIdKey,
   listAndObject,
   listAndObjectConnections,
+  listAndObjectConnectionsWithNullNodes,
   mergeTestData,
   nested,
   noNested,

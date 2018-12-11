@@ -8,6 +8,7 @@ const {
   customIdKey,
   listAndObject,
   listAndObjectConnections,
+  listAndObjectConnectionsWithNullNodes,
   mergeTestData,
   nested,
   noNested,
@@ -33,6 +34,13 @@ test('`normalize` throws if a node has no `__typename` field', t => {
 test('`normalize` throws if `useConnections` is false and has `pageInfo` field', t => {
   const { normalize, } = new GraphQLNormalizr()
   t.throws(() => normalize({ data: allUsersConnections, }))
+})
+
+test('snapshot :: `normalize` correctly handles NULL nodes', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+  })
+  t.snapshot(normalize({ data: listAndObjectConnectionsWithNullNodes, }))
 })
 
 test('snapshot :: `normalize` simple, not nested data', t => {

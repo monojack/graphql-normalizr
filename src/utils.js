@@ -34,6 +34,10 @@ export function isNil (value) {
   return value == null
 }
 
+export function isNotNil (value) {
+  return !isNil(value)
+}
+
 export function prop (path) {
   return function (obj) {
     return path.split('.').reduce((acc, curr) => {

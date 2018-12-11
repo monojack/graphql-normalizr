@@ -6,6 +6,7 @@ import {
   map,
   prop,
   isNil,
+  isNotNil,
   isArray,
   isObject,
   isScalar,
@@ -69,7 +70,7 @@ export function GraphQLNormalizr ({
         ...acc,
         [key]: isObject(value)
           ? useConnections && value.hasOwnProperty('edges')
-            ? value.edges.map(prop(`node.${idKey}`))
+            ? value.edges.map(prop(`node.${idKey}`)).filter(isNotNil)
             : prop(idKey)(value)
           : isArray(value) && !value.every(isScalar)
             ? map(prop(idKey))(value)
@@ -121,7 +122,7 @@ export function GraphQLNormalizr ({
       }
 
       for (const [ key, value, ] of Object.entries(root)) {
-        if (useConnections && value.hasOwnProperty('edges')) {
+        if (useConnections && !isNil(value) && value.hasOwnProperty('edges')) {
           walk(value.edges, `${path ? `${path}.` : ``}${key}.edges`)
         } else if (
           isObject(value) ||
@@ -135,7 +136,7 @@ export function GraphQLNormalizr ({
 
           walk(value, `${path ? `${path}.` : ``}${key}`)
         } else {
-          if (!paths[path]) {
+          if (!paths[path] && isNotNil(value)) {
             assoc(stack.entity, mapNestedValue(stack.value), normalized)
             paths[path] = { done: true, }
           }
