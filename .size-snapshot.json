@@ -5,9 +5,9 @@
     "gzipped": 3396
   },
   "lib/graphql-normalizr.cjs.js": {
-    "bundled": 15536,
-    "minified": 8497,
-    "gzipped": 3628
+    "bundled": 15886,
+    "minified": 8650,
+    "gzipped": 3686
   },
   "es/graphql-normalizr.esm.js": {
     "bundled": 15632,

@@ -600,6 +600,23 @@ const withScalarArraysConnections = {
   ],
 }
 
+const useConnectionsGraphqlQuery = `
+  query getCollections {
+    users {
+      friends {
+        edges {
+          node {
+            name
+          }
+        }
+        pageInfo {
+          hasNextPage
+        }
+      }
+    }
+  }
+`
+
 module.exports = {
   typeWithSameTypeFieldsConnections,
   allUsersConnections,
@@ -613,4 +630,5 @@ module.exports = {
   noTypeNames,
   withScalarArrays,
   withScalarArraysConnections,
+  useConnectionsGraphqlQuery,
 }
