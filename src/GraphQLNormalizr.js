@@ -113,7 +113,7 @@ export function GraphQLNormalizr ({
 
     let warned = false
     ;(function walk (root, path = '') {
-      if (root && root.hasOwnProperty('pageInfo') && !useConnections) {
+      if (root && Object.prototype.hasOwnProperty.call(root, 'pageInfo') && !useConnections) {
         process.env.NODE_ENV !== 'production' &&
           !warned &&
           // eslint-disable-next-line
