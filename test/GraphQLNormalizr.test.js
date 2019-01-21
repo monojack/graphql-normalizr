@@ -205,7 +205,7 @@ test('snapshot :: `parse` with { useConnections: false }', t => {
 })
 
 test('snapshot :: `parse` with { useConnections: true }', t => {
-  const { parse } = new GraphQLNormalizr({
+  const { parse, } = new GraphQLNormalizr({
     useConnections: true,
   })
   t.snapshot(print(parse(useConnectionsGraphqlQuery)))
