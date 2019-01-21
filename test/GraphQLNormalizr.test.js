@@ -1,5 +1,5 @@
 const test = require('ava')
-const { visit, } = require('graphql')
+const { visit, print, } = require('graphql')
 const gql = require('graphql-tag')
 
 const { GraphQLNormalizr, } = require('../')
@@ -16,6 +16,7 @@ const {
   withScalarArrays,
   withScalarArraysConnections,
   typeWithSameTypeFieldsConnections,
+  useConnectionsGraphqlQuery,
 } = require('./mocks/data')
 
 test('GraphQLNormalizr returns an object with `normalize`, `parse` and `addRequiredFields` methdos', t => {
@@ -194,6 +195,20 @@ test('snapshot :: `normalize` with `{ casing: "snake" }`', t => {
     casing: 'snake',
   })
   t.snapshot(normalize({ data: listAndObject, }))
+})
+
+test('snapshot :: `parse` with { useConnections: false }', t => {
+  const { parse, } = new GraphQLNormalizr({
+    useConnections: false,
+  })
+  t.snapshot(print(parse(useConnectionsGraphqlQuery)))
+})
+
+test('snapshot :: `parse` with { useConnections: true }', t => {
+  const { parse, } = new GraphQLNormalizr({
+    useConnections: true,
+  })
+  t.snapshot(print(parse(useConnectionsGraphqlQuery)))
 })
 
 test('`normalize` with cache', t => {

@@ -44,6 +44,7 @@ export function GraphQLNormalizr ({
 } = {}) {
   const hasIdField = hasField(idKey)
   const hasTypeNameField = hasField('__typename')
+  const hasEdgesField = hasField('edges')
 
   const idField = createField(idKey)
   const typeNameField = createField('__typename')
@@ -156,12 +157,20 @@ export function GraphQLNormalizr ({
     return normalized
   }
 
+  const connectionFields = [ 'edges', 'pageInfo', ]
+
+  const excludeMetaFields = useConnections
+    ? (node, key, parent, path) =>
+      hasEdgesField(node.selections) || connectionFields.includes(parent.name.value)
+    : () => false
+
   function addRequiredFields (query) {
     return visit(query, {
       SelectionSet (node, key, parent, path) {
-        if (parent.kind === Kind.OPERATION_DEFINITION) return
+        if (parent.kind === Kind.OPERATION_DEFINITION || excludeMetaFields(node, key, parent, path)) return
 
-        !hasIdField(node.selections) && node.selections.unshift(idField)
+        !hasIdField(node.selections) &&
+          node.selections.unshift(idField)
         !hasTypeNameField(node.selections) &&
           node.selections.unshift(typeNameField)
 
