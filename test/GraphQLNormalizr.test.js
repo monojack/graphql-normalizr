@@ -15,6 +15,7 @@ const {
   noTypeNames,
   withScalarArrays,
   withScalarArraysConnections,
+  withMultipleTypesConnections,
   typeWithSameTypeFieldsConnections,
   useConnectionsGraphqlQuery,
 } = require('./mocks/data')
@@ -195,6 +196,14 @@ test('snapshot :: `normalize` with `{ casing: "snake" }`', t => {
     casing: 'snake',
   })
   t.snapshot(normalize({ data: listAndObject, }))
+})
+
+test('snapshot :: `normalize` with { useConnections: true, unionTypes: true }', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+    unionTypes: true,
+  })
+  t.snapshot(normalize({ data: withMultipleTypesConnections, }))
 })
 
 test('snapshot :: `parse` with { useConnections: false }', t => {

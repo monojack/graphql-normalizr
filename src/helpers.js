@@ -26,3 +26,13 @@ export const toLists = (object = {}) =>
     }),
     {}
   )
+
+export const getIn = (obj, keys, defaultValue) => {
+  let result = obj
+  let index = 0
+  while (index < keys.length && result != null) {
+    result = result[keys[index]]
+    index += 1
+  }
+  return keys.length === index && result !== undefined ? result : defaultValue
+}

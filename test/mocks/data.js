@@ -600,6 +600,41 @@ const withScalarArraysConnections = {
   ],
 }
 
+const withMultipleTypesConnections = {
+  collections: [
+    {
+      __typename: 'Collection',
+      id: '5a6cf127c2b20834f655148d',
+      name: 'Continue Watching',
+      videos: {
+        edges: [
+          {
+            node: {
+              __typename: 'Movie',
+              id: '5a6cf127c2b20834f655148a',
+              name: 'Batman',
+            },
+          },
+          {
+            node: {
+              __typename: 'Show',
+              id: '5a6cf127c2b20834f655148b',
+              name: 'Prison Break',
+            },
+          },
+          {
+            node: {
+              __typename: 'Movie',
+              id: '5a6cf127c2b20834f655148c',
+              name: 'Superman',
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+
 const useConnectionsGraphqlQuery = `
   query getCollections {
     users {
@@ -630,5 +665,6 @@ module.exports = {
   noTypeNames,
   withScalarArrays,
   withScalarArraysConnections,
+  withMultipleTypesConnections,
   useConnectionsGraphqlQuery,
 }

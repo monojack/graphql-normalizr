@@ -1,7 +1,7 @@
 import { visit, parse as gql, Kind, } from 'graphql'
 
 import { pluralize, } from './pluralize'
-import { hasField, createField, toLists, buildNoTypenameError, } from './helpers'
+import { hasField, createField, toLists, buildNoTypenameError, getIn, } from './helpers'
 import {
   map,
   prop,
@@ -41,6 +41,7 @@ export function GraphQLNormalizr ({
   plural = true,
   casing = 'camel',
   useConnections = false,
+  unionTypes = false,
 } = {}) {
   const hasIdField = hasField(idKey)
   const hasTypeNameField = hasField('__typename')
@@ -62,6 +63,17 @@ export function GraphQLNormalizr ({
     return typeMap[type] || entities[type] || caseTransform(type)
   }
 
+  function mapper (...path) {
+    const entities = {}
+    return unionTypes
+      ? item => {
+        const { __typename: typename, [idKey]: id, } = getIn(item, path, {})
+        entities[typename] = getEntityName(typename, entities)
+        return { typename: getEntityName(typename, entities), id, }
+      }
+      : item => getIn(item, path, {})[idKey]
+  }
+
   function mapNestedValue (obj) {
     const object = { ...obj, }
     !typenames && delete object.__typename
@@ -71,10 +83,10 @@ export function GraphQLNormalizr ({
         ...acc,
         [key]: isObject(value)
           ? useConnections && value.hasOwnProperty('edges')
-            ? value.edges.map(prop(`node.${idKey}`)).filter(isNotNil)
+            ? value.edges.map(mapper('node')).filter(isNotNil)
             : prop(idKey)(value)
           : isArray(value) && !value.every(isScalar)
-            ? map(prop(idKey))(value)
+            ? map(mapper())(value)
             : value,
       }
     }, {})
