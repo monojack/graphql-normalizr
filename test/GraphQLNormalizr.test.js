@@ -202,6 +202,7 @@ test('snapshot :: `normalize` with { useConnections: true, unionTypes: true }', 
   const { normalize, } = new GraphQLNormalizr({
     useConnections: true,
     unionTypes: true,
+    idKey: '_id',
   })
   t.snapshot(normalize({ data: withMultipleTypesConnections, }))
 })

@@ -1,7 +1,13 @@
 import { visit, parse as gql, Kind, } from 'graphql'
 
 import { pluralize, } from './pluralize'
-import { hasField, createField, toLists, buildNoTypenameError, getIn, } from './helpers'
+import {
+  hasField,
+  createField,
+  toLists,
+  buildNoTypenameError,
+  getIn,
+} from './helpers'
 import {
   map,
   prop,
@@ -69,7 +75,7 @@ export function GraphQLNormalizr ({
       ? item => {
         const { __typename: typename, [idKey]: id, } = getIn(item, path, {})
         entities[typename] = getEntityName(typename, entities)
-        return { typename: getEntityName(typename, entities), id, }
+        return { collection: getEntityName(typename, entities), [idKey]: id, }
       }
       : item => getIn(item, path, {})[idKey]
   }
@@ -126,7 +132,11 @@ export function GraphQLNormalizr ({
 
     let warned = false
     ;(function walk (root, path = '') {
-      if (root && Object.prototype.hasOwnProperty.call(root, 'pageInfo') && !useConnections) {
+      if (
+        root &&
+        Object.prototype.hasOwnProperty.call(root, 'pageInfo') &&
+        !useConnections
+      ) {
         process.env.NODE_ENV !== 'production' &&
           !warned &&
           // eslint-disable-next-line
@@ -173,16 +183,21 @@ export function GraphQLNormalizr ({
 
   const excludeMetaFields = useConnections
     ? (node, key, parent, path) =>
-      hasEdgesField(node.selections) || connectionFields.includes(parent.name.value)
+      hasEdgesField(node.selections) ||
+        connectionFields.includes(parent.name.value)
     : () => false
 
   function addRequiredFields (query) {
     return visit(query, {
       SelectionSet (node, key, parent, path) {
-        if (parent.kind === Kind.OPERATION_DEFINITION || excludeMetaFields(node, key, parent, path)) return
+        if (
+          parent.kind === Kind.OPERATION_DEFINITION ||
+          excludeMetaFields(node, key, parent, path)
+        ) {
+          return
+        }
 
-        !hasIdField(node.selections) &&
-          node.selections.unshift(idField)
+        !hasIdField(node.selections) && node.selections.unshift(idField)
         !hasTypeNameField(node.selections) &&
           node.selections.unshift(typeNameField)
 
