@@ -149,6 +149,39 @@ test('snapshot :: `normalize` without graphql connections but `useConnections` f
   t.snapshot(normalize({ data: listAndObject, }))
 })
 
+test('snapshot :: `normalize` with { typePointers: true }', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    typePointers: true,
+  })
+  t.snapshot(normalize({ data: listAndObject, }))
+})
+
+test('snapshot :: `normalize` with { useConnections: true, typePointers: true }', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+    typePointers: true,
+    idKey: '_id',
+  })
+  t.snapshot(normalize({ data: withMultipleTypesConnections, }))
+})
+
+test('snapshot :: `normalize` without graphql connections but `useConnections` and `typePointers` flags set to true and custom entity names', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+    typePointers: true,
+    typeMap: { User: 'accounts', BlogPost: 'stories', Comment: 'messages', },
+  })
+  t.snapshot(normalize({ data: listAndObject, }))
+})
+
+test('snapshot :: `normalize` without graphql connections but `useConnections` and `typePointers` flags set to true and scalar array', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+    typePointers: true,
+  })
+  t.snapshot(normalize({ data: withScalarArrays, }))
+})
+
 test('snapshot :: `normalize` with `{ plural: false }`', t => {
   const { normalize, } = new GraphQLNormalizr({
     plural: false,
@@ -198,15 +231,6 @@ test('snapshot :: `normalize` with `{ casing: "snake" }`', t => {
   t.snapshot(normalize({ data: listAndObject, }))
 })
 
-test('snapshot :: `normalize` with { useConnections: true, typePointers: true }', t => {
-  const { normalize, } = new GraphQLNormalizr({
-    useConnections: true,
-    typePointers: true,
-    idKey: '_id',
-  })
-  t.snapshot(normalize({ data: withMultipleTypesConnections, }))
-})
-
 test('snapshot :: `parse` with { useConnections: false }', t => {
   const { parse, } = new GraphQLNormalizr({
     useConnections: false,
@@ -219,20 +243,6 @@ test('snapshot :: `parse` with { useConnections: true }', t => {
     useConnections: true,
   })
   t.snapshot(print(parse(useConnectionsGraphqlQuery)))
-})
-
-test('`normalize` with cache', t => {
-  let normalize
-
-  normalize = new GraphQLNormalizr().normalize
-  const data = normalize({ data: listAndObject, })
-  const newData = normalize({ data: listAndObject, })
-  t.not(data, newData)
-
-  normalize = new GraphQLNormalizr({ caching: true, }).normalize
-  const _data = normalize({ data: listAndObject, })
-  const _newData = normalize({ data: listAndObject, })
-  t.is(_data, _newData)
 })
 
 test('`parse` adds the required ["id", "__typename"] fields', t => {
@@ -273,4 +283,18 @@ test('`parse` adds the required ["id", "__typename"] fields', t => {
     },
   })
   t.true(bool)
+})
+
+test('`normalize` with cache', t => {
+  let normalize
+
+  normalize = new GraphQLNormalizr().normalize
+  const data = normalize({ data: listAndObject, })
+  const newData = normalize({ data: listAndObject, })
+  t.not(data, newData)
+
+  normalize = new GraphQLNormalizr({ caching: true, }).normalize
+  const _data = normalize({ data: listAndObject, })
+  const _newData = normalize({ data: listAndObject, })
+  t.is(_data, _newData)
 })
