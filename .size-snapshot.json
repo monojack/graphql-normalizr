@@ -3,5 +3,24 @@
     "bundled": 16866,
     "minified": 9041,
     "gzipped": 3846
+  },
+  "dist/graphql-normalizr.umd.js": {
+    "bundled": 18124,
+    "minified": 8068,
+    "gzipped": 3611
+  },
+  "esm/graphql-normalizr.esm.js": {
+    "bundled": 16685,
+    "minified": 8867,
+    "gzipped": 3790,
+    "treeshaked": {
+      "rollup": {
+        "code": 16,
+        "import_statements": 16
+      },
+      "webpack": {
+        "code": 1000
+      }
+    }
   }
 }
