@@ -47,7 +47,7 @@ export function GraphQLNormalizr ({
   plural = true,
   casing = 'camel',
   useConnections = false,
-  unionTypes = false,
+  typePointers = false,
 } = {}) {
   const hasIdField = hasField(idKey)
   const hasTypeNameField = hasField('__typename')
@@ -71,7 +71,7 @@ export function GraphQLNormalizr ({
 
   function mapper (...path) {
     const entities = {}
-    return unionTypes
+    return typePointers
       ? item => {
         const { __typename: typename, [idKey]: id, } = getIn(item, path, {})
         entities[typename] = getEntityName(typename, entities)

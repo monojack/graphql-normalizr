@@ -198,10 +198,10 @@ test('snapshot :: `normalize` with `{ casing: "snake" }`', t => {
   t.snapshot(normalize({ data: listAndObject, }))
 })
 
-test('snapshot :: `normalize` with { useConnections: true, unionTypes: true }', t => {
+test('snapshot :: `normalize` with { useConnections: true, typePointers: true }', t => {
   const { normalize, } = new GraphQLNormalizr({
     useConnections: true,
-    unionTypes: true,
+    typePointers: true,
     idKey: '_id',
   })
   t.snapshot(normalize({ data: withMultipleTypesConnections, }))
