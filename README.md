@@ -28,8 +28,7 @@ Normalize GraphQL responses for persisting in the client cache/state.
               {
                 "__typename": "Comment",
                 "id": "5a6efb94b0e8c36f99fba019",
-                "message":
-                  "Alias quod est voluptatibus aut quis sunt aut numquam."
+                "message": "Alias quod est voluptatibus aut quis sunt aut numquam."
               },
               {
                 "__typename": "Comment",
@@ -44,8 +43,7 @@ Normalize GraphQL responses for persisting in the client cache/state.
               {
                 "__typename": "Comment",
                 "id": "5a6efb94b0e8c36f99fba01e",
-                "message":
-                  "Possimus beatae vero recusandae beatae quas ut commodi laboriosam."
+                "message": "Possimus beatae vero recusandae beatae quas ut commodi laboriosam."
               }
             ]
           }
@@ -75,8 +73,7 @@ into:
     },
     "5a6efb94b0e8c36f99fba01e": {
       "id": "5a6efb94b0e8c36f99fba01e",
-      "message":
-        "Possimus beatae vero recusandae beatae quas ut commodi laboriosam."
+      "message": "Possimus beatae vero recusandae beatae quas ut commodi laboriosam."
     }
   },
   "blogPosts": {
@@ -153,6 +150,7 @@ const normalizer = new GraphQLNormalizr(config)
 - [typeMap](#typemap)
 - [lists](#lists)
 - [typenames](#typenames)
+- [typePointers](#typepointers)
 - [caching](#caching)
 - [plural](#plural)
 - [casing](#casing)
@@ -392,6 +390,35 @@ normalize(response)
 //    }
 //  }
 // }
+```
+
+##### typePointers
+
+> Boolean
+
+Default is `false`. Enables explicit type pointers - instead of an array of only identifiers and having to figure out which collection they point to, it will return objects containing the identifier as well as the collection name. Works especially well with Union types and Interfaces.
+
+```js
+
+const { normalize } = new GraphQLNormalizr({
+  typePointers: true,
+})
+
+// ['5a6cf127c2b20834f655148a', '5a6cf127c2b20834f655148b', '5a6cf127c2b20834f655148c']
+users: [
+  {
+    _id: '5a6cf127c2b20834f655148a', // '_id' or the specified key
+    collection: 'members', // type Member
+  },
+  {
+    _id: '5a6cf127c2b20834f655148b', // '_id' or the specified key
+    collection: 'authors', // type Author
+  },
+  {
+    _id: '5a6cf127c2b20834f655148c', // '_id' or the specified key
+    collection: 'members', // type Member
+  },
+],
 ```
 
 ##### caching
