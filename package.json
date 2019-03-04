@@ -43,6 +43,7 @@
     "dev": "npm run build:esm -- -w",
     "pretest": "npm run build:cjs",
     "test": "ava --verbose --serial",
+    "test:update": "ava --verbose --serial --update-snapshots",
     "build:esm": "rollup -c rollup.config.esm.js",
     "build:cjs": "rollup -c rollup.config.cjs.js",
     "build": "npm run rollup",

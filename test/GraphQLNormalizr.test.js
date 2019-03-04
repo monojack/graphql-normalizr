@@ -18,6 +18,7 @@ const {
   withMultipleTypesConnections,
   typeWithSameTypeFieldsConnections,
   useConnectionsGraphqlQuery,
+  withIgnoreList,
 } = require('./mocks/data')
 
 test('GraphQLNormalizr returns an object with `normalize`, `parse` and `addRequiredFields` methdos', t => {
@@ -43,6 +44,11 @@ test('snapshot :: `normalize` correctly handles NULL nodes', t => {
     useConnections: true,
   })
   t.snapshot(normalize({ data: listAndObjectConnectionsWithNullNodes, }))
+})
+
+test('snapshot :: `normalize` with ignore list', t => {
+  const { normalize, } = new GraphQLNormalizr()
+  t.snapshot(normalize({ ignoreKeys: ['address'], data: withIgnoreList, }))
 })
 
 test('snapshot :: `normalize` simple, not nested data', t => {

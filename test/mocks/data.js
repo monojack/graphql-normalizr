@@ -635,6 +635,33 @@ const withMultipleTypesConnections = {
   ],
 }
 
+const withIgnoreList = {
+  allUsers: [
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551481',
+      email: 'Madisen_Braun@hotmail.com',
+      address: {
+        street: 'Street',
+        zip: '10000',
+        city: 'LA',
+        __typename: 'Address',
+      },
+    },
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551482',
+      email: 'Robel.Ansel@yahoo.com',
+      address: {
+        street: 'Street #2',
+        zip: '20000',
+        city: 'New York',
+        __typename: 'Address',
+      },
+    },
+  ],
+}
+
 const useConnectionsGraphqlQuery = `
   query getCollections {
     users {
@@ -667,4 +694,5 @@ module.exports = {
   withScalarArraysConnections,
   withMultipleTypesConnections,
   useConnectionsGraphqlQuery,
+  withIgnoreList,
 }

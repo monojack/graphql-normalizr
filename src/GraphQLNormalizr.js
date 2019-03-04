@@ -80,14 +80,15 @@ export function GraphQLNormalizr ({
       : item => getIn(item, path, {})[idKey]
   }
 
-  function mapNestedValue (obj) {
+  function mapNestedValue (obj, ignoreKeys) {
     const object = { ...obj, }
     !typenames && delete object.__typename
 
     const res = Object.entries(object).reduce((acc, [ key, value, ]) => {
+      const processKey = !(ignoreKeys && ignoreKeys.includes(key))
       return {
         ...acc,
-        [key]: isObject(value)
+        [key]: processKey && isObject(value)
           ? useConnections && value.hasOwnProperty('edges')
             ? value.edges.map(mapper('node')).filter(isNotNil)
             : prop(idKey)(value)
@@ -113,7 +114,7 @@ export function GraphQLNormalizr ({
     }
   }
 
-  function normalize ({ data, }) {
+  function normalize ({ data, ignoreKeys, }) {
     const paths = {}
     const entities = {}
     const stack = {}
@@ -145,11 +146,14 @@ export function GraphQLNormalizr ({
       }
 
       for (const [ key, value, ] of Object.entries(root)) {
+        const processKey = !(ignoreKeys && ignoreKeys.includes(key))
         if (useConnections && !isNil(value) && value.hasOwnProperty('edges')) {
           walk(value.edges, `${path ? `${path}.` : ``}${key}.edges`)
         } else if (
-          isObject(value) ||
-          (isArray(value) && !value.every(isScalar))
+          processKey && (
+            isObject(value) ||
+            (isArray(value) && !value.every(isScalar))
+          )
         ) {
           const type = value.__typename
           type && (entities[type] = getEntityName(type, entities))
@@ -160,7 +164,7 @@ export function GraphQLNormalizr ({
           walk(value, `${path ? `${path}.` : ``}${key}`)
         } else {
           if (!paths[path] && isNotNil(value)) {
-            assoc(stack.entity, mapNestedValue(stack.value), normalized)
+            assoc(stack.entity, mapNestedValue(stack.value, ignoreKeys), normalized)
             paths[path] = { done: true, }
           }
         }
