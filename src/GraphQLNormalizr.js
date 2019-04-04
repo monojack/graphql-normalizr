@@ -179,12 +179,15 @@ export function GraphQLNormalizr ({
     return normalized
   }
 
+  const isInlineFragment = node => node.kind === 'InlineFragment'
+
   const connectionFields = [ 'edges', 'pageInfo', ]
 
   const excludeMetaFields = useConnections
     ? (node, key, parent, path) =>
+      node.selections.some(isInlineFragment) ||
       hasEdgesField(node.selections) ||
-        connectionFields.includes(parent.name.value)
+      (!isInlineFragment(parent) && connectionFields.includes(parent.name.value))
     : () => false
 
   function addRequiredFields (query) {
