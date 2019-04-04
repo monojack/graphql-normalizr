@@ -4,7 +4,7 @@ export const buildNoTypenameError = node =>
   )}`
 
 export const hasField = name => set =>
-  set.some(({ name: { value, }, }) => value === name)
+  set.some(({ alias, name }) => (alias || name).value === name)
 
 export const createField = name => ({
   kind: 'Field',
