@@ -179,7 +179,7 @@ export function GraphQLNormalizr ({
     return normalized
   }
 
-  const isInlineFragment = node => node.kind === 'InlineFragment'
+  const isInlineFragment = node => node.kind === Kind.INLINE_FRAGMENT
 
   const connectionFields = [ 'edges', 'pageInfo', ]
 
