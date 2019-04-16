@@ -3,8 +3,8 @@ export const buildNoTypenameError = node =>
     node
   )}`
 
-export const hasField = name => set =>
-  set.some(({ name: { value, }, }) => value === name)
+export const hasField = fieldName => set =>
+  set.some(({ alias, name, }) => (alias || name).value === fieldName)
 
 export const createField = name => ({
   kind: 'Field',
