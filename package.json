@@ -20,23 +20,23 @@
     "@babel/core": "7.1.2",
     "@babel/plugin-proposal-object-rest-spread": "7.0.0",
     "@babel/preset-env": "7.1.0",
-    "ava": "0.25.0",
-    "eslint": "5.6.1",
+    "ava": "^2.0.0",
+    "eslint": "^5.16.0",
     "eslint-config-mono": "2.0.0",
-    "graphql": "14.0.2",
-    "graphql-tag": "2.10.0",
-    "rollup": "0.67.1",
-    "rollup-plugin-babel": "4.0.3",
-    "rollup-plugin-node-resolve": "3.4.0",
-    "rollup-plugin-replace": "2.1.0",
-    "rollup-plugin-size-snapshot": "0.7.0",
-    "rollup-plugin-terser": "3.0.0"
+    "graphql": "^14.3.1",
+    "graphql-tag": "^2.10.1",
+    "rollup": "^1.14.3",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-node-resolve": "^5.0.1",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-size-snapshot": "^0.9.0",
+    "rollup-plugin-terser": "^5.0.0"
   },
   "bugs": {
     "url": "https://github.com/monojack/graphql-normalizr/issues"
   },
   "peerDependencies": {
-    "graphql": "^0.11.* || ^0.12.* || ^0.13.* || ^0.14.*"
+    "graphql": "^0.11.* || ^0.12.* || ^0.13.* || ^0.14.* || ^14.*"
   },
   "scripts": {
     "rollup": "rollup -c",

@@ -44,16 +44,6 @@ test('camelize :: returns correct form for the required case', t => {
   }
 })
 
-test('camelize :: returns correct form for the required case', t => {
-  const entries = Object.entries(camelizeTests)
-  t.plan(entries.length)
-
-  for (const [ key, value, ] of entries) {
-    const camelized = camelize(key)
-    t.true(camelized === value)
-  }
-})
-
 test('decamelize :: returns correct form for the required case', t => {
   const entries = Object.entries(decamelizeTests)
   t.plan(entries.length)
