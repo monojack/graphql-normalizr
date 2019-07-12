@@ -1,18 +1,18 @@
 {
   "lib/graphql-normalizr.cjs.js": {
-    "bundled": 17179,
-    "minified": 9164,
-    "gzipped": 3909
+    "bundled": 17240,
+    "minified": 9172,
+    "gzipped": 3916
   },
   "dist/graphql-normalizr.umd.js": {
-    "bundled": 18472,
-    "minified": 8195,
+    "bundled": 18534,
+    "minified": 8203,
     "gzipped": 3682
   },
   "esm/graphql-normalizr.esm.js": {
-    "bundled": 16988,
-    "minified": 8982,
-    "gzipped": 3852,
+    "bundled": 17049,
+    "minified": 8990,
+    "gzipped": 3859,
     "treeshaked": {
       "rollup": {
         "code": 16,
