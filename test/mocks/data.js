@@ -520,6 +520,45 @@ const listAndObjectConnectionsWithNullNodes = {
   },
 }
 
+const listAndObjectConnectionsWithNullNodesNormalized = {
+  blogPosts: {
+    '5a6cf127c2b20834f6551483': {
+      id: '5a6cf127c2b20834f6551483',
+      title: 'Aut aut reiciendis',
+    },
+    '5a6cf127c2b20834f6551484': {
+      id: '5a6cf127c2b20834f6551484',
+      title: 'Sunt ut aut',
+    },
+    '5a6cf127c2b20834f6551485': {
+      id: '5a6cf127c2b20834f6551485',
+      title: 'Nesciunt esse',
+    },
+    '5a6cf127c2b20834f6551486': {
+      id: '5a6cf127c2b20834f6551486',
+      title: 'Nihil assumenda',
+    },
+  },
+  comments: {
+    '5a6cf127c2b20834f655148a': {
+      id: '5a6cf127c2b20834f655148a',
+      message: 'Voluptates ex sint amet repellendus impedit nam.',
+    },
+  },
+  users: {
+    '5a6cf127c2b20834f6551481': {
+      email: 'Madisen_Braun@hotmail.com',
+      id: '5a6cf127c2b20834f6551481',
+      posts: [ '5a6cf127c2b20834f6551483', '5a6cf127c2b20834f6551485', ],
+    },
+    '5a6cf127c2b20834f6551482': {
+      email: 'Robel.Ansel@yahoo.com',
+      id: '5a6cf127c2b20834f6551482',
+      posts: [ '5a6cf127c2b20834f6551484', '5a6cf127c2b20834f6551486', ],
+    },
+  },
+}
+
 const withScalarArrays = {
   allBlogPosts: [
     {
@@ -652,6 +691,70 @@ const useConnectionsGraphqlQuery = `
   }
 `
 
+const typeWithNoIdentifier = {
+  allProducts: [
+    {
+      __typename: 'Product',
+      id: 1,
+      name: 'Product A',
+      price: {
+        __typename: 'CurrencyModel',
+        value: 1000,
+        currency: 'USD',
+      },
+    },
+    {
+      __typename: 'Product',
+      id: 2,
+      name: 'Product B',
+      price: {
+        __typename: 'CurrencyModel',
+        value: 800,
+        currency: 'EUR',
+      },
+    },
+    {
+      __typename: 'Product',
+      id: 3,
+      name: 'Product C',
+      price: {
+        __typename: 'CurrencyModel',
+        value: 1000,
+        currency: 'USD',
+      },
+    },
+  ],
+}
+
+const typeWithNoIdentifierNormalized = {
+  products: {
+    1: {
+      id: 1,
+      name: 'Product A',
+      price: {
+        value: 1000,
+        currency: 'USD',
+      },
+    },
+    2: {
+      id: 2,
+      name: 'Product B',
+      price: {
+        value: 800,
+        currency: 'EUR',
+      },
+    },
+    3: {
+      id: 3,
+      name: 'Product C',
+      price: {
+        value: 1000,
+        currency: 'USD',
+      },
+    },
+  },
+}
+
 module.exports = {
   typeWithSameTypeFieldsConnections,
   allUsersConnections,
@@ -659,6 +762,7 @@ module.exports = {
   listAndObject,
   listAndObjectConnections,
   listAndObjectConnectionsWithNullNodes,
+  listAndObjectConnectionsWithNullNodesNormalized,
   mergeTestData,
   nested,
   noNested,
@@ -667,4 +771,6 @@ module.exports = {
   withScalarArraysConnections,
   withMultipleTypesConnections,
   useConnectionsGraphqlQuery,
+  typeWithNoIdentifier,
+  typeWithNoIdentifierNormalized,
 }

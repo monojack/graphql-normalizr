@@ -90,7 +90,11 @@ export function GraphQLNormalizr ({
         [key]: isObject(value)
           ? useConnections && value.hasOwnProperty('edges')
             ? value.edges.map(mapper('node')).filter(isNotNil)
-            : prop(idKey)(value)
+            : (() => {
+              const _v = prop(idKey)(value)
+              const { __typename, ..._value } = value
+              return _v == null ? (!typenames ? _value : value) : _v
+            })()
           : isArray(value) && !value.every(isScalar)
             ? map(mapper())(value)
             : value,
@@ -102,6 +106,8 @@ export function GraphQLNormalizr ({
   function assoc (entity, value, normalized) {
     if (isNil(entity)) throw new Error(buildNoTypenameError(value))
     const id = value[idKey]
+
+    if (isNil(id)) return
 
     const existingEntities = normalized[entity]
     normalized[entity] = existingEntities || {}
@@ -186,8 +192,9 @@ export function GraphQLNormalizr ({
   const excludeMetaFields = useConnections
     ? (node, key, parent, path) =>
       node.selections.some(isInlineFragment) ||
-      hasEdgesField(node.selections) ||
-      (!isInlineFragment(parent) && connectionFields.includes(parent.name.value))
+        hasEdgesField(node.selections) ||
+        (!isInlineFragment(parent) &&
+          connectionFields.includes(parent.name.value))
     : () => false
 
   function addRequiredFields (query) {

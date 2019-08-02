@@ -9,6 +9,7 @@ const {
   listAndObject,
   listAndObjectConnections,
   listAndObjectConnectionsWithNullNodes,
+  listAndObjectConnectionsWithNullNodesNormalized,
   mergeTestData,
   nested,
   noNested,
@@ -18,6 +19,8 @@ const {
   withMultipleTypesConnections,
   typeWithSameTypeFieldsConnections,
   useConnectionsGraphqlQuery,
+  typeWithNoIdentifier,
+  typeWithNoIdentifierNormalized,
 } = require('./mocks/data')
 
 test('GraphQLNormalizr returns an object with `normalize`, `parse` and `addRequiredFields` methdos', t => {
@@ -297,4 +300,20 @@ test('`normalize` with cache', t => {
   const _data = normalize({ data: listAndObject, })
   const _newData = normalize({ data: listAndObject, })
   t.is(_data, _newData)
+})
+
+test('`normalize` list', t => {
+  let normalize
+
+  normalize = new GraphQLNormalizr().normalize
+  const normalized = normalize({ data: typeWithNoIdentifier, })
+  t.deepEqual(normalized, typeWithNoIdentifierNormalized)
+})
+
+test('`normalize` list and object connections with null nodes', t => {
+  let normalize
+
+  normalize = new GraphQLNormalizr({ useConnections: true, }).normalize
+  const normalized = normalize({ data: listAndObjectConnectionsWithNullNodes, })
+  t.deepEqual(normalized, listAndObjectConnectionsWithNullNodesNormalized)
 })
