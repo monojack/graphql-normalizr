@@ -167,7 +167,6 @@ export function GraphQLNormalizr ({
     }
 
     normalized = lists ? toLists(normalized) : normalized
-    console.log('TCL: normalize -> normalized', normalized)
 
     return normalized
   }
