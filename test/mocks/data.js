@@ -761,6 +761,70 @@ const withEmptyArrays = {
 
 const withEmptyArraysNormalized = {}
 
+const emptyListAndObject = {
+  allUsers: [
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551481',
+      email: 'Madisen_Braun@hotmail.com',
+      posts: [],
+    },
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551482',
+      email: 'Robel.Ansel@yahoo.com',
+      posts: [
+        {
+          __typename: 'BlogPost',
+          id: '5a6cf127c2b20834f6551484',
+          title: 'Sunt ut aut',
+        },
+        {
+          __typename: 'BlogPost',
+          id: '5a6cf127c2b20834f6551486',
+          title: 'Nihil assumenda',
+        },
+      ],
+    },
+  ],
+  findComment: {
+    __typename: 'Comment',
+    id: '5a6cf127c2b20834f655148a',
+    message: 'Voluptates ex sint amet repellendus impedit nam.',
+  },
+}
+
+const emptyListAndObjectNormalized = {
+  blogPosts: {
+    '5a6cf127c2b20834f6551484': {
+      id: '5a6cf127c2b20834f6551484',
+      title: 'Sunt ut aut',
+    },
+    '5a6cf127c2b20834f6551486': {
+      id: '5a6cf127c2b20834f6551486',
+      title: 'Nihil assumenda',
+    },
+  },
+  comments: {
+    '5a6cf127c2b20834f655148a': {
+      id: '5a6cf127c2b20834f655148a',
+      message: 'Voluptates ex sint amet repellendus impedit nam.',
+    },
+  },
+  users: {
+    '5a6cf127c2b20834f6551481': {
+      email: 'Madisen_Braun@hotmail.com',
+      id: '5a6cf127c2b20834f6551481',
+      posts: [],
+    },
+    '5a6cf127c2b20834f6551482': {
+      email: 'Robel.Ansel@yahoo.com',
+      id: '5a6cf127c2b20834f6551482',
+      posts: [ '5a6cf127c2b20834f6551484', '5a6cf127c2b20834f6551486', ],
+    },
+  },
+}
+
 module.exports = {
   typeWithSameTypeFieldsConnections,
   allUsersConnections,
@@ -781,4 +845,6 @@ module.exports = {
   typeWithNoIdentifierNormalized,
   withEmptyArrays,
   withEmptyArraysNormalized,
+  emptyListAndObject,
+  emptyListAndObjectNormalized,
 }

@@ -23,6 +23,8 @@ const {
   typeWithNoIdentifierNormalized,
   withEmptyArrays,
   withEmptyArraysNormalized,
+  emptyListAndObject,
+  emptyListAndObjectNormalized,
 } = require('./mocks/data')
 
 test('GraphQLNormalizr returns an object with `normalize`, `parse` and `addRequiredFields` methdos', t => {
@@ -314,9 +316,16 @@ test('`normalize` list and object connections with null nodes', t => {
   t.deepEqual(normalized, listAndObjectConnectionsWithNullNodesNormalized)
 })
 
-test.only('`normalize` with empty arrays', t => {
+test('`normalize` with empty arrays', t => {
   const { normalize, } = new GraphQLNormalizr()
 
   const normalized = normalize({ data: withEmptyArrays, })
   t.deepEqual(normalized, withEmptyArraysNormalized)
+})
+
+test('`normalize` with empty list', t => {
+  const { normalize, } = new GraphQLNormalizr()
+
+  const normalized = normalize({ data: emptyListAndObject, })
+  t.deepEqual(normalized, emptyListAndObjectNormalized)
 })

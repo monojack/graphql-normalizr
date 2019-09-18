@@ -1,8 +1,8 @@
 {
   "lib/graphql-normalizr.cjs.js": {
-    "bundled": 18307,
-    "minified": 9712,
-    "gzipped": 4135
+    "bundled": 18246,
+    "minified": 9664,
+    "gzipped": 4112
   },
   "dist/graphql-normalizr.umd.js": {
     "bundled": 19663,
