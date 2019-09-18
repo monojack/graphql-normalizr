@@ -1,13 +1,7 @@
 import { visit, parse as gql, Kind, } from 'graphql'
 
 import { pluralize, } from './pluralize'
-import {
-  hasField,
-  createField,
-  toLists,
-  buildNoTypenameError,
-  getIn,
-} from './helpers'
+import { hasField, createField, toLists, buildNoTypenameError, getIn, } from './helpers'
 import {
   map,
   prop,
@@ -15,6 +9,7 @@ import {
   isNotNil,
   isArray,
   isObject,
+  isEmpty,
   isScalar,
   toLower,
   toUpper,
@@ -23,11 +18,7 @@ import {
   toPascal,
   toKebab,
 } from './utils'
-import {
-  CACHE_READ_ERROR,
-  CACHE_WRITE_ERROR,
-  PAGEINFO_WITH_USE_CONNECTIONS_FALSE,
-} from './constants'
+import { CACHE_READ_ERROR, CACHE_WRITE_ERROR, PAGEINFO_WITH_USE_CONNECTIONS_FALSE, } from './constants'
 
 const casingMethodMap = {
   lower: toLower,
@@ -138,11 +129,7 @@ export function GraphQLNormalizr ({
 
     let warned = false
     ;(function walk (root, path = '') {
-      if (
-        root &&
-        Object.prototype.hasOwnProperty.call(root, 'pageInfo') &&
-        !useConnections
-      ) {
+      if (root && Object.prototype.hasOwnProperty.call(root, 'pageInfo') && !useConnections) {
         process.env.NODE_ENV !== 'production' &&
           !warned &&
           // eslint-disable-next-line
@@ -153,10 +140,9 @@ export function GraphQLNormalizr ({
       for (const [ key, value, ] of Object.entries(root)) {
         if (useConnections && !isNil(value) && value.hasOwnProperty('edges')) {
           walk(value.edges, `${path ? `${path}.` : ``}${key}.edges`)
-        } else if (
-          isObject(value) ||
-          (isArray(value) && !value.every(isScalar))
-        ) {
+        } else if ((isObject(value) || isArray(value)) && isEmpty(value)) {
+          paths[path] = { done: true, }
+        } else if (isObject(value) || (isArray(value) && !value.every(isScalar))) {
           const type = value.__typename
           type && (entities[type] = getEntityName(type, entities))
 
@@ -181,6 +167,7 @@ export function GraphQLNormalizr ({
     }
 
     normalized = lists ? toLists(normalized) : normalized
+    console.log('TCL: normalize -> normalized', normalized)
 
     return normalized
   }
@@ -193,23 +180,18 @@ export function GraphQLNormalizr ({
     ? (node, key, parent, path) =>
       node.selections.some(isInlineFragment) ||
         hasEdgesField(node.selections) ||
-        (!isInlineFragment(parent) &&
-          connectionFields.includes(parent.name.value))
+        (!isInlineFragment(parent) && connectionFields.includes(parent.name.value))
     : () => false
 
   function addRequiredFields (query) {
     return visit(query, {
       SelectionSet (node, key, parent, path) {
-        if (
-          parent.kind === Kind.OPERATION_DEFINITION ||
-          excludeMetaFields(node, key, parent, path)
-        ) {
+        if (parent.kind === Kind.OPERATION_DEFINITION || excludeMetaFields(node, key, parent, path)) {
           return
         }
 
         !hasIdField(node.selections) && node.selections.unshift(idField)
-        !hasTypeNameField(node.selections) &&
-          node.selections.unshift(typeNameField)
+        !hasTypeNameField(node.selections) && node.selections.unshift(typeNameField)
 
         return node
       },

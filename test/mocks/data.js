@@ -755,6 +755,12 @@ const typeWithNoIdentifierNormalized = {
   },
 }
 
+const withEmptyArrays = {
+  foos: [],
+}
+
+const withEmptyArraysNormalized = {}
+
 module.exports = {
   typeWithSameTypeFieldsConnections,
   allUsersConnections,
@@ -773,4 +779,6 @@ module.exports = {
   useConnectionsGraphqlQuery,
   typeWithNoIdentifier,
   typeWithNoIdentifierNormalized,
+  withEmptyArrays,
+  withEmptyArraysNormalized,
 }

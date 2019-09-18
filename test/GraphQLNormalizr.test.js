@@ -21,6 +21,8 @@ const {
   useConnectionsGraphqlQuery,
   typeWithNoIdentifier,
   typeWithNoIdentifierNormalized,
+  withEmptyArrays,
+  withEmptyArraysNormalized,
 } = require('./mocks/data')
 
 test('GraphQLNormalizr returns an object with `normalize`, `parse` and `addRequiredFields` methdos', t => {
@@ -268,9 +270,7 @@ test('`parse` adds the required ["id", "__typename"] fields', t => {
   let bool = false
   visit(documentAST, {
     SelectionSet (node, parent) {
-      bool = node.selections.some(s =>
-        [ 'id', '__typename', ].includes(s.name.value)
-      )
+      bool = node.selections.some(s => [ 'id', '__typename', ].includes(s.name.value))
     },
   })
   t.false(bool)
@@ -280,9 +280,7 @@ test('`parse` adds the required ["id", "__typename"] fields', t => {
   documentAST = parse(query)
   visit(documentAST, {
     SelectionSet (node, parent) {
-      bool = node.selections.some(s =>
-        [ 'id', '__typename', ].includes(s.name.value)
-      )
+      bool = node.selections.some(s => [ 'id', '__typename', ].includes(s.name.value))
     },
   })
   t.true(bool)
@@ -303,17 +301,22 @@ test('`normalize` with cache', t => {
 })
 
 test('`normalize` list', t => {
-  let normalize
+  const { normalize, } = new GraphQLNormalizr()
 
-  normalize = new GraphQLNormalizr().normalize
   const normalized = normalize({ data: typeWithNoIdentifier, })
   t.deepEqual(normalized, typeWithNoIdentifierNormalized)
 })
 
 test('`normalize` list and object connections with null nodes', t => {
-  let normalize
+  const { normalize, } = new GraphQLNormalizr({ useConnections: true, })
 
-  normalize = new GraphQLNormalizr({ useConnections: true, }).normalize
   const normalized = normalize({ data: listAndObjectConnectionsWithNullNodes, })
   t.deepEqual(normalized, listAndObjectConnectionsWithNullNodesNormalized)
+})
+
+test.only('`normalize` with empty arrays', t => {
+  const { normalize, } = new GraphQLNormalizr()
+
+  const normalized = normalize({ data: withEmptyArrays, })
+  t.deepEqual(normalized, withEmptyArraysNormalized)
 })
