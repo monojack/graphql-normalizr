@@ -108,13 +108,25 @@ Yes, everything is all great when the response mirrors the exact structure we as
 
 ## Table of contents
 
-- [Installation](#installation)
-- [API by example](#api-by-example)
-  - [`GraphQLNormalizr`](#graphqlnormalizr)
-  - [`parse`](#parse)
-  - [`addRequiredFields`](#addrequiredfields)
-  - [`normalize`](#normalize)
-- [Migrating from 1.x to 2.x](#migrating)
+- [**graphql-normalizr**](#graphql-normalizr)
+  - [Motivation](#motivation)
+  - [Table of contents](#table-of-contents)
+  - [Installation](#installation)
+  - [API by example](#api-by-example)
+    - [GraphQLNormalizr](#graphqlnormalizr)
+        - [idKey](#idkey)
+        - [useConnections](#useconnections)
+        - [typeMap](#typemap)
+        - [plural](#plural)
+        - [casing](#casing)
+        - [lists](#lists)
+        - [typenames](#typenames)
+        - [typePointers](#typepointers)
+        - [caching](#caching)
+    - [`parse`](#parse)
+    - [`addRequiredFields`](#addrequiredfields)
+    - [`normalize`](#normalize)
+  - [Migrating](#migrating)
 
 ## Installation
 
@@ -124,11 +136,14 @@ npm install graphql-normalizr
 
 ## API by example
 
-The **GraphQLNormalizr** constructor function returns an object containing 3 methods:
+The **GraphQLNormalizr** constructor function returns an object containing 1 method:
 
-1.  [parse](#parse)
-2.  [addRequiredFields](#addrequiredfields)
-3.  [normalize](#normalize)
+1.  [normalize](#normalize)
+
+The library itself exports 2 more methods:
+
+1. [parse](#parse)
+2. [addRequiredFields](#addrequiredfields)
 
 Depending on how you write your queries, you may or may not use `parse` or `addRequiredFields`, but `normalize` is the method that you will transform the GraphQL response. As you've probably seen from the **TL;DR**, all response nodes must contain the `__typename` and `id` fields. `__typename` is a [GraphQL meta field](http://graphql.org/learn/queries/#meta-fields) and the `id` key may be customized when creating the GraphQLNormalizr client.
 
@@ -145,15 +160,25 @@ const normalizer = new GraphQLNormalizr(config)
 
 **config**: optional - the configuration object containing information for instantiating the client. it takes the following props:
 
-- [idKey](#idkey)
-- [useConnections](#useconnections)
-- [typeMap](#typemap)
-- [lists](#lists)
-- [typenames](#typenames)
-- [typePointers](#typepointers)
-- [caching](#caching)
-- [plural](#plural)
-- [casing](#casing)
+- [**graphql-normalizr**](#graphql-normalizr)
+  - [Motivation](#motivation)
+  - [Table of contents](#table-of-contents)
+  - [Installation](#installation)
+  - [API by example](#api-by-example)
+    - [GraphQLNormalizr](#graphqlnormalizr)
+        - [idKey](#idkey)
+        - [useConnections](#useconnections)
+        - [typeMap](#typemap)
+        - [plural](#plural)
+        - [casing](#casing)
+        - [lists](#lists)
+        - [typenames](#typenames)
+        - [typePointers](#typepointers)
+        - [caching](#caching)
+    - [`parse`](#parse)
+    - [`addRequiredFields`](#addrequiredfields)
+    - [`normalize`](#normalize)
+  - [Migrating](#migrating)
 
 ##### idKey
 
@@ -442,9 +467,16 @@ cached === normalized // => true
 
 Turns a **GraphQL source** into a **Document** and adds the required fields where necessary.
 
+Arguments:
+| argument  | default | required | type |
+| ------------------ | ------------- | ------------- | ----------------- |
+| source  			 | undefined  	 |	yes			 |	string			 |
+| useConnections  	 | false  		 |	no		     |		boolean		 |
+| idKey  		     | id  			 |	no		     |		string		 |
+
 ```js
 // ...
-import { GraphQLNormalizr } from 'graphql-normalizr'
+import { parse } from 'graphql-normalizr'
 
 const source = `{
   allUsers {
@@ -457,8 +489,6 @@ const source = `{
     }
   }
 }`
-
-const { parse } = new GraphQLNormalizr()
 
 const query = parse(source) // will add `id` and `__typename` fields to all the nodes
 
@@ -488,14 +518,19 @@ print(query)
 
 ### `addRequiredFields`
 
+Arguments:
+| argument  | default | required | type |
+| ------------------ | ------------- | ------------- | ----------------- |
+| query  			 | undefined  	 |	yes			 |	GraphQL AST Tree |
+| useConnections  	 | false  		 |	no		     |		boolean		 |
+| idKey  		     | id  			 |	no		     |		string		 |
+
 If you only have access to the **Document**, you can use the **print** method from `graphql` to get the **source** and parse it. But that may be expensive and you shouldn't have to print a document just to parse it again. `addRequiredFields` will add the `id` and `__typename` fields to that document, without the need of extracting it's source.
 
 ```js
 // ...
-import { GraphQLNormalizr } from 'graphql-normalizr'
+import { addRequiredFields } from 'graphql-normalizr'
 import { allUsersQuery } from './queries'
-
-const { addRequiredFields } = new GraphQLNormalizr()
 
 const query = addRequiredFields(allUsersQuery)
 
@@ -507,7 +542,7 @@ const query = addRequiredFields(allUsersQuery)
 The following is a full example where we use [apollo-fetch](https://github.com/apollographql/apollo-fetch/tree/master/packages/apollo-fetch) to execute a query and then normalize it with **GraphQLNormalizr**
 
 ```js
-const { GraphQLNormalizr } = require('graphql-normalizr')
+const { GraphQLNormalizr, parse } = require('graphql-normalizr')
 const { createApolloFetch } = require('apollo-fetch')
 
 const uri = 'http://localhost:8080/graphql'
@@ -530,7 +565,7 @@ const source = `
   }
 `
 
-const { normalize, parse } = new GraphQLNormalizr()
+const { normalize } = new GraphQLNormalizr()
 const query = parse(source)
 
 fetch({ query }).then(response => {

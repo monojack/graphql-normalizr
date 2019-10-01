@@ -2,7 +2,7 @@ const test = require('ava')
 const { visit, print, } = require('graphql')
 const gql = require('graphql-tag')
 
-const { GraphQLNormalizr, } = require('../')
+const { GraphQLNormalizr, addRequiredFields, parse, } = require('../')
 const {
   allUsersConnections,
   customIdKey,
@@ -27,12 +27,10 @@ const {
   emptyListAndObjectNormalized,
 } = require('./mocks/data')
 
-test('GraphQLNormalizr returns an object with `normalize`, `parse` and `addRequiredFields` methdos', t => {
-  const { normalize, parse, addRequiredFields, } = new GraphQLNormalizr()
+test('GraphQLNormalizr returns an object with `normalize` method', t => {
+  const { normalize } = new GraphQLNormalizr()
 
   t.not(undefined, normalize)
-  t.not(undefined, parse)
-  t.not(undefined, addRequiredFields)
 })
 
 test('`normalize` throws if a node has no `__typename` field', t => {
@@ -239,17 +237,11 @@ test('snapshot :: `normalize` with `{ casing: "snake" }`', t => {
 })
 
 test('snapshot :: `parse` with { useConnections: false }', t => {
-  const { parse, } = new GraphQLNormalizr({
-    useConnections: false,
-  })
   t.snapshot(print(parse(useConnectionsGraphqlQuery)))
 })
 
 test('snapshot :: `parse` with { useConnections: true }', t => {
-  const { parse, } = new GraphQLNormalizr({
-    useConnections: true,
-  })
-  t.snapshot(print(parse(useConnectionsGraphqlQuery)))
+  t.snapshot(print(parse(useConnectionsGraphqlQuery, true)));
 })
 
 test('`parse` adds the required ["id", "__typename"] fields', t => {
@@ -278,7 +270,6 @@ test('`parse` adds the required ["id", "__typename"] fields', t => {
   t.false(bool)
 
   bool = false
-  const { parse, } = new GraphQLNormalizr()
   documentAST = parse(query)
   visit(documentAST, {
     SelectionSet (node, parent) {
