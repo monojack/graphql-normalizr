@@ -468,6 +468,7 @@ cached === normalized // => true
 Turns a **GraphQL source** into a **Document** and adds the required fields where necessary.
 
 Arguments:
+
 | argument  | default | required | type |
 | ------------------ | ------------- | ------------- | ----------------- |
 | source  			 | undefined  	 |	yes			 |	string			 |
@@ -519,6 +520,7 @@ print(query)
 ### `addRequiredFields`
 
 Arguments:
+
 | argument  | default | required | type |
 | ------------------ | ------------- | ------------- | ----------------- |
 | query  			 | undefined  	 |	yes			 |	GraphQL AST Tree |
