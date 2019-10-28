@@ -1,6 +1,6 @@
 {
   "name": "graphql-normalizr",
-  "version": "2.9.0",
+  "version": "2.9.2",
   "description": "Normalize GraphQL response",
   "repository": {
     "type": "git",
@@ -60,5 +60,10 @@
     "dist",
     "esm",
     "lib"
-  ]
+  ],
+  "bit": {
+    "env": {},
+    "componentsDefaultDirectory": "components/{name}",
+    "packageManager": "npm"
+  }
 }

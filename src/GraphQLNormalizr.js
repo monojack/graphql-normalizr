@@ -95,14 +95,25 @@ export function GraphQLNormalizr ({
 
     if (isNil(id)) return
 
-    const existingEntities = normalized[entity]
-    normalized[entity] = existingEntities || {}
+    let initObj = {
+      ids: [],
+      entities: {}
+    };
 
-    const existing = normalized[entity][id] || {}
-    normalized[entity][id] = {
+    const existingEntities = normalized[entity]
+    normalized[entity] = existingEntities || initObj
+
+    const existing = normalized[entity].entities[id] || {}
+    normalized[entity].entities[id] = {
       ...existing,
       ...value,
     }
+
+    normalized[entity].ids = [
+      ...normalized[entity].ids,
+      id
+    ];    
+
   }
 
   function normalize ({ data, }) {
@@ -162,7 +173,6 @@ export function GraphQLNormalizr ({
     }
 
     normalized = lists ? toLists(normalized) : normalized
-
     return normalized
   }
 
