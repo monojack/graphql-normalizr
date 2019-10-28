@@ -29,6 +29,8 @@ const casingMethodMap = {
   snake: toSnake,
 }
 
+const defaultIdKey = 'id';
+
 export function GraphQLNormalizr ({
   idKey = 'id',
   typeMap = {},
@@ -40,13 +42,6 @@ export function GraphQLNormalizr ({
   useConnections = false,
   typePointers = false,
 } = {}) {
-  const hasIdField = hasField(idKey)
-  const hasTypeNameField = hasField('__typename')
-  const hasEdgesField = hasField('edges')
-
-  const idField = createField(idKey)
-  const typeNameField = createField('__typename')
-
   const cache = new Map()
 
   function caseTransform (type) {
@@ -100,14 +95,25 @@ export function GraphQLNormalizr ({
 
     if (isNil(id)) return
 
-    const existingEntities = normalized[entity]
-    normalized[entity] = existingEntities || {}
+    let initObj = {
+      ids: [],
+      entities: {}
+    };
 
-    const existing = normalized[entity][id] || {}
-    normalized[entity][id] = {
+    const existingEntities = normalized[entity]
+    normalized[entity] = existingEntities || initObj
+
+    const existing = normalized[entity].entities[id] || {}
+    normalized[entity].entities[id] = {
       ...existing,
       ...value,
     }
+
+    normalized[entity].ids = [
+      ...normalized[entity].ids,
+      id
+    ];    
+
   }
 
   function normalize ({ data, }) {
@@ -167,13 +173,24 @@ export function GraphQLNormalizr ({
     }
 
     normalized = lists ? toLists(normalized) : normalized
-
     return normalized
   }
 
-  const isInlineFragment = node => node.kind === Kind.INLINE_FRAGMENT
+  return { normalize };
+}
 
-  const connectionFields = [ 'edges', 'pageInfo', ]
+const isInlineFragment = node => node.kind === Kind.INLINE_FRAGMENT
+
+const connectionFields = [ 'edges', 'pageInfo', ]
+const hasEdgesField = hasField('edges')
+
+export function addRequiredFields(query, useConnections = false, idKey = defaultIdKey) {
+
+  const hasIdField = hasField(idKey)
+  const hasTypeNameField = hasField('__typename')
+
+  const idField = createField(idKey)
+  const typeNameField = createField('__typename')
 
   const excludeMetaFields = useConnections
     ? (node, key, parent, path) =>
@@ -181,25 +198,21 @@ export function GraphQLNormalizr ({
         hasEdgesField(node.selections) ||
         (!isInlineFragment(parent) && connectionFields.includes(parent.name.value))
     : () => false
+  
+  return visit(query, {
+    SelectionSet (node, key, parent, path) {
+      if (parent.kind === Kind.OPERATION_DEFINITION || excludeMetaFields(node, key, parent, path, useConnections)) {
+        return
+      }
 
-  function addRequiredFields (query) {
-    return visit(query, {
-      SelectionSet (node, key, parent, path) {
-        if (parent.kind === Kind.OPERATION_DEFINITION || excludeMetaFields(node, key, parent, path)) {
-          return
-        }
+      !hasIdField(node.selections) && node.selections.unshift(idField)
+      !hasTypeNameField(node.selections) && node.selections.unshift(typeNameField)
 
-        !hasIdField(node.selections) && node.selections.unshift(idField)
-        !hasTypeNameField(node.selections) && node.selections.unshift(typeNameField)
+      return node
+    },
+  })
+}
 
-        return node
-      },
-    })
-  }
-
-  function parse (qs) {
-    return addRequiredFields(gql(qs, { noLocation: true, }))
-  }
-
-  return { normalize, addRequiredFields, parse, }
+export function parse(qs, useConnections = false, idKey = defaultIdKey) {
+  return addRequiredFields(gql(qs, { noLocation: true, }), useConnections, idKey)
 }
