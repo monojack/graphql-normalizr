@@ -144,11 +144,11 @@ export function GraphQLNormalizr ({
         } else if ((isObject(value) || isArray(value)) && isEmpty(value)) {
           paths[path] = { done: true, }
         } else if (isObject(value) || (isArray(value) && !value.every(isScalar))) {
-          const type = value.__typename
-          type && (entities[type] = getEntityName(type, entities))
           if (exclude[stack.entity] && exclude[stack.entity].includes(key)) {
             paths[path] = { done: true, }
           } else {
+            const type = value.__typename
+            type && (entities[type] = getEntityName(type, entities))
             stack.value = value
             stack.entity = entities[type]
             walk(value, `${path ? `${path}.` : ``}${key}`)
