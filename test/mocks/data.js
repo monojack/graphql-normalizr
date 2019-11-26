@@ -825,6 +825,60 @@ const emptyListAndObjectNormalized = {
   },
 }
 
+const preferenceObject = {
+  pref1: null,
+  pref2: 'String',
+  pref3: [],
+  pref4: {},
+  pref5: { a: 1, b: 2, },
+}
+
+const jsonContent = {
+  allUsers: [
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551480',
+      preferences: null,
+    },
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551481',
+      preferences: {},
+    },
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551482',
+      preferences: [],
+    },
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551483',
+      preferences: preferenceObject,
+    },
+  ],
+}
+
+const jsonContentNormalized = {
+  users: {
+    '5a6cf127c2b20834f6551480': {
+      id: '5a6cf127c2b20834f6551480',
+      preferences: null,
+    },
+    '5a6cf127c2b20834f6551481': {
+      id: '5a6cf127c2b20834f6551481',
+      preferences: {},
+    },
+    '5a6cf127c2b20834f6551482': {
+      id: '5a6cf127c2b20834f6551482',
+      preferences: [],
+    },
+    '5a6cf127c2b20834f6551483': {
+      id: '5a6cf127c2b20834f6551483',
+      preferences: preferenceObject,
+    },
+  },
+}
+
 module.exports = {
   typeWithSameTypeFieldsConnections,
   allUsersConnections,
@@ -847,4 +901,6 @@ module.exports = {
   withEmptyArraysNormalized,
   emptyListAndObject,
   emptyListAndObjectNormalized,
+  jsonContent,
+  jsonContentNormalized,
 }

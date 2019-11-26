@@ -25,6 +25,8 @@ const {
   withEmptyArraysNormalized,
   emptyListAndObject,
   emptyListAndObjectNormalized,
+  jsonContent,
+  jsonContentNormalized,
 } = require('./mocks/data')
 
 test('GraphQLNormalizr returns an object with `normalize`, `parse` and `addRequiredFields` methdos', t => {
@@ -328,4 +330,13 @@ test('`normalize` with empty list', t => {
 
   const normalized = normalize({ data: emptyListAndObject, })
   t.deepEqual(normalized, emptyListAndObjectNormalized)
+})
+
+test('`normalize` with excluded JSON content', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    exclude: { users: [ 'preferences', ], },
+  })
+
+  const normalized = normalize({ data: jsonContent, })
+  t.deepEqual(normalized, jsonContentNormalized)
 })
