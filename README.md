@@ -148,6 +148,7 @@ const normalizer = new GraphQLNormalizr(config)
 - [idKey](#idkey)
 - [useConnections](#useconnections)
 - [typeMap](#typemap)
+- [exclude](#exclude)
 - [lists](#lists)
 - [typenames](#typenames)
 - [typePointers](#typepointers)
@@ -291,6 +292,88 @@ normalize(response)
 //      email: 'Lloyd.Nikolaus@yahoo.com'
 //    }
 //  }
+// }
+```
+
+##### exclude
+
+> Object
+
+Prevent normalization of specified fields
+
+```js
+const response = {
+  data: {
+    allUsers: [
+      {
+        __typename: 'User',
+        id: '5a6efb94b0e8c36f99fba013',
+        email: 'Lloyd.Nikolaus@yahoo.com',
+        preferences: null
+        posts: [
+          {
+            __typename: 'BlogPost',
+            id: '5a6cf127c2b20834f6551484',
+            likes: 10,
+            title: 'Sunt ut aut',
+            tags: {},
+          }
+        ]
+      },
+      {
+        __typename: 'User',
+        id: '5a6efb94b0e8c36f99fba013',
+        email: 'Anna.Klaus@gmail.com',
+        preferences: { foo: 'apple', bar: 1,  baz: { a: 'b' }, quux: null, }
+        posts: [
+          {
+            __typename: 'BlogPost',
+            id: '5a6cf127c2b20834f6551485',
+            likes: 23,
+            title: 'Nesciunt esse',
+            tags: [],
+          }
+        ]
+      },
+    ],
+  },
+}
+```
+
+Normalize the data excluding the `preferences` field on `users` and the `tags` field on `blogPosts`:
+
+```js
+// using destructuring to get the `normalize` method of the client
+const { normalize } = new GraphQLNormalizr({ exclude: { users: [ 'preferences' ], blogPosts: [ 'tags' ] } })
+normalize(response)
+// =>
+// {
+//   users: {
+//     '5a6efb94b0e8c36f99fba013': {,
+//       id: '5a6efb94b0e8c36f99fba013',
+//       email: 'Lloyd.Nikolaus@yahoo.com',
+//       preferences: null
+//     },
+//     '5a6efb94b0e8c36f99fba013': {
+//       id: '5a6efb94b0e8c36f99fba013',
+//       email: 'Anna.Klaus@gmail.com',
+//       preferences: { foo: 'apple', bar: 1,  baz: { a: 'b' }, quux: null, }
+//     },
+//   },
+//   blogPosts: {
+//     '5a6cf127c2b20834f6551484': {
+//       id: '5a6cf127c2b20834f6551484',
+//       likes: 10,
+//       title: 'Sunt ut aut',
+//       tags: {},
+//     },
+//     '5a6cf127c2b20834f6551485': {
+//       id: '5a6cf127c2b20834f6551485',
+//       likes: 23,
+//       title: 'Nesciunt esse',
+//       tags: [],
+//     },
+//   }
 // }
 ```
 
