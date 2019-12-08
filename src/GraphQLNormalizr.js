@@ -152,7 +152,7 @@ export function GraphQLNormalizr ({
             stack.value = value
             stack.entity = entities[type]
             walk(value, `${path ? `${path}.` : ``}${key}`)
-           }
+          }
         } else {
           if (!paths[path] && isNotNil(value)) {
             assoc(stack.entity, mapNestedValue(stack.value), normalized)
