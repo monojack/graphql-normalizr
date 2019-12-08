@@ -27,6 +27,10 @@ const {
   emptyListAndObjectNormalized,
   jsonContent,
   jsonContentNormalized,
+  withJSONContentAndGraphQLConnections,
+  withJSONContentAndGraphQLConnectionsNormalized,
+  nestedAndJSONContent,
+  nestedAndJSONContentNormalized,
 } = require('./mocks/data')
 
 test('GraphQLNormalizr returns an object with `normalize`, `parse` and `addRequiredFields` methdos', t => {
@@ -339,4 +343,24 @@ test('`normalize` with excluded JSON content', t => {
 
   const normalized = normalize({ data: jsonContent, })
   t.deepEqual(normalized, jsonContentNormalized)
+})
+
+test('`normalize` with connections and excluded JSON content', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+    typePointers: true,
+    exclude: { movies: [ 'preferences', ], shows: [ 'preferences', ], },
+  })
+
+  const normalized = normalize({ data: withJSONContentAndGraphQLConnections, })
+  t.deepEqual(normalized, withJSONContentAndGraphQLConnectionsNormalized)
+})
+
+test('`normalize` with nested data and excluded JSON content', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    exclude: { blogPosts: [ 'preferences', ], },
+  })
+
+  const normalized = normalize({ data: nestedAndJSONContent, })
+  t.deepEqual(normalized, nestedAndJSONContentNormalized)
 })
