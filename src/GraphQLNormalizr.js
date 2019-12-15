@@ -39,6 +39,7 @@ export function GraphQLNormalizr ({
   casing = 'camel',
   useConnections = false,
   typePointers = false,
+  exclude = {},
 } = {}) {
   const hasIdField = hasField(idKey)
   const hasTypeNameField = hasField('__typename')
@@ -143,13 +144,15 @@ export function GraphQLNormalizr ({
         } else if ((isObject(value) || isArray(value)) && isEmpty(value)) {
           paths[path] = { done: true, }
         } else if (isObject(value) || (isArray(value) && !value.every(isScalar))) {
-          const type = value.__typename
-          type && (entities[type] = getEntityName(type, entities))
-
-          stack.value = value
-          stack.entity = entities[type]
-
-          walk(value, `${path ? `${path}.` : ``}${key}`)
+          if (exclude[stack.entity] && exclude[stack.entity].includes(key)) {
+            paths[path] = { done: true, }
+          } else {
+            const type = value.__typename
+            type && (entities[type] = getEntityName(type, entities))
+            stack.value = value
+            stack.entity = entities[type]
+            walk(value, `${path ? `${path}.` : ``}${key}`)
+           }
         } else {
           if (!paths[path] && isNotNil(value)) {
             assoc(stack.entity, mapNestedValue(stack.value), normalized)
