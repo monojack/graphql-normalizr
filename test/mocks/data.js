@@ -879,6 +879,312 @@ const jsonContentNormalized = {
   },
 }
 
+const withJSONContentAndGraphQLConnections = {
+  collections: [
+    {
+      __typename: 'Collection',
+      id: '5a6cf127c2b20834f655148d',
+      name: 'Continue Watching',
+      videos: {
+        edges: [
+          {
+            node: {
+              __typename: 'Movie',
+              id: '5a6cf127c2b20834f655148a',
+              name: 'Batman',
+              preferences: null,
+            },
+          },
+          {
+            node: {
+              __typename: 'Show',
+              id: '5a6cf127c2b20834f655148b',
+              name: 'Prison Break',
+              preferences: {},
+            },
+          },
+          {
+            node: {
+              __typename: 'Movie',
+              id: '5a6cf127c2b20834f655148c',
+              name: 'Superman',
+              preferences: [],
+            },
+          },
+          {
+            node: {
+              __typename: 'Show',
+              id: '5a6cf127c2b20834f655148d',
+              name: 'Avengers',
+              preferences: preferenceObject,
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+const withJSONContentAndGraphQLConnectionsNormalized = {
+  collections: {
+    '5a6cf127c2b20834f655148d': {
+      id: '5a6cf127c2b20834f655148d',
+      name: 'Continue Watching',
+      videos: [
+        {
+          id: '5a6cf127c2b20834f655148a',
+          collection: 'movies',
+        },
+        {
+          id: '5a6cf127c2b20834f655148b',
+          collection: 'shows',
+        },
+        {
+          id: '5a6cf127c2b20834f655148c',
+          collection: 'movies',
+        },
+        {
+          id: '5a6cf127c2b20834f655148d',
+          collection: 'shows',
+        },
+      ],
+    },
+  },
+  movies: {
+    '5a6cf127c2b20834f655148a': {
+      id: '5a6cf127c2b20834f655148a',
+      name: 'Batman',
+      preferences: null,
+    },
+    '5a6cf127c2b20834f655148c': {
+      id: '5a6cf127c2b20834f655148c',
+      name: 'Superman',
+      preferences: [],
+    },
+  },
+  shows: {
+    '5a6cf127c2b20834f655148b': {
+      id: '5a6cf127c2b20834f655148b',
+      name: 'Prison Break',
+      preferences: {},
+    },
+    '5a6cf127c2b20834f655148d': {
+      id: '5a6cf127c2b20834f655148d',
+      name: 'Avengers',
+      preferences: preferenceObject,
+    },
+  },
+}
+
+const nestedAndJSONContent = {
+  allUsers: [
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551481',
+      email: 'Madisen_Braun@hotmail.com',
+      posts: [
+        {
+          __typename: 'BlogPost',
+          id: '5a6cf127c2b20834f6551483',
+          title: 'Aut aut reiciendis',
+          preferences: null,
+        },
+        {
+          __typename: 'BlogPost',
+          id: '5a6cf127c2b20834f6551485',
+          title: 'Nesciunt esse',
+          preferences: [],
+        },
+      ],
+    },
+    {
+      __typename: 'User',
+      id: '5a6cf127c2b20834f6551482',
+      email: 'Robel.Ansel@yahoo.com',
+      posts: [
+        {
+          __typename: 'BlogPost',
+          id: '5a6cf127c2b20834f6551484',
+          title: 'Sunt ut aut',
+          preferences: {},
+        },
+        {
+          __typename: 'BlogPost',
+          id: '5a6cf127c2b20834f6551486',
+          title: 'Nihil assumenda',
+          preferences: preferenceObject,
+        },
+      ],
+    },
+  ],
+  allBlogPosts: [
+    {
+      __typename: 'BlogPost',
+      id: '5a6cf127c2b20834f6551483',
+      likes: 0,
+      comments: [
+        {
+          __typename: 'Comment',
+          id: '5a6cf127c2b20834f655148e',
+          message: 'Voluptates aut eum.',
+        },
+      ],
+    },
+    {
+      __typename: 'BlogPost',
+      id: '5a6cf127c2b20834f6551484',
+      likes: 10,
+      comments: [
+        {
+          __typename: 'Comment',
+          id: '5a6cf127c2b20834f6551487',
+          message: 'Et soluta ipsam quas facilis possimus et.',
+        },
+        {
+          __typename: 'Comment',
+          id: '5a6cf127c2b20834f6551488',
+          message: 'Tempore sed enim qui aliquam est saepe qui.',
+        },
+        {
+          __typename: 'Comment',
+          id: '5a6cf127c2b20834f6551489',
+          message: 'Ea et est autem dicta necessitatibus vel.',
+        },
+      ],
+    },
+    {
+      __typename: 'BlogPost',
+      id: '5a6cf127c2b20834f6551485',
+      likes: 23,
+      comments: [
+        {
+          __typename: 'Comment',
+          id: '5a6cf127c2b20834f655148b',
+          message: 'Consectetur cum est odit et qui.',
+        },
+        {
+          __typename: 'Comment',
+          id: '5a6cf127c2b20834f655148d',
+          message: 'Aut vel possimus nisi qui.',
+        },
+      ],
+    },
+    {
+      __typename: 'BlogPost',
+      id: '5a6cf127c2b20834f6551486',
+      likes: 3,
+      comments: [
+        {
+          __typename: 'Comment',
+          id: '5a6cf127c2b20834f655148a',
+          message: 'Voluptates ex sint amet repellendus impedit nam.',
+        },
+        {
+          __typename: 'Comment',
+          id: '5a6cf127c2b20834f655148c',
+          message: 'Voluptas quidem et saepe voluptatibus enim est.',
+        },
+      ],
+    },
+  ],
+}
+
+const nestedAndJSONContentNormalized = {
+  blogPosts: {
+    '5a6cf127c2b20834f6551483': {
+      comments: [
+        '5a6cf127c2b20834f655148e',
+      ],
+      id: '5a6cf127c2b20834f6551483',
+      likes: 0,
+      title: 'Aut aut reiciendis',
+      preferences: null,
+    },
+    '5a6cf127c2b20834f6551484': {
+      comments: [
+        '5a6cf127c2b20834f6551487',
+        '5a6cf127c2b20834f6551488',
+        '5a6cf127c2b20834f6551489',
+      ],
+      id: '5a6cf127c2b20834f6551484',
+      likes: 10,
+      title: 'Sunt ut aut',
+      preferences: {},
+    },
+    '5a6cf127c2b20834f6551485': {
+      comments: [
+        '5a6cf127c2b20834f655148b',
+        '5a6cf127c2b20834f655148d',
+      ],
+      id: '5a6cf127c2b20834f6551485',
+      likes: 23,
+      title: 'Nesciunt esse',
+      preferences: [],
+    },
+    '5a6cf127c2b20834f6551486': {
+      comments: [
+        '5a6cf127c2b20834f655148a',
+        '5a6cf127c2b20834f655148c',
+      ],
+      id: '5a6cf127c2b20834f6551486',
+      likes: 3,
+      title: 'Nihil assumenda',
+      preferences: preferenceObject,
+    },
+  },
+  comments: {
+    '5a6cf127c2b20834f6551487': {
+      id: '5a6cf127c2b20834f6551487',
+      message: 'Et soluta ipsam quas facilis possimus et.',
+    },
+    '5a6cf127c2b20834f6551488': {
+      id: '5a6cf127c2b20834f6551488',
+      message: 'Tempore sed enim qui aliquam est saepe qui.',
+    },
+    '5a6cf127c2b20834f6551489': {
+      id: '5a6cf127c2b20834f6551489',
+      message: 'Ea et est autem dicta necessitatibus vel.',
+    },
+    '5a6cf127c2b20834f655148a': {
+      id: '5a6cf127c2b20834f655148a',
+      message: 'Voluptates ex sint amet repellendus impedit nam.',
+    },
+    '5a6cf127c2b20834f655148b': {
+      id: '5a6cf127c2b20834f655148b',
+      message: 'Consectetur cum est odit et qui.',
+    },
+    '5a6cf127c2b20834f655148c': {
+      id: '5a6cf127c2b20834f655148c',
+      message: 'Voluptas quidem et saepe voluptatibus enim est.',
+    },
+    '5a6cf127c2b20834f655148d': {
+      id: '5a6cf127c2b20834f655148d',
+      message: 'Aut vel possimus nisi qui.',
+    },
+    '5a6cf127c2b20834f655148e': {
+      id: '5a6cf127c2b20834f655148e',
+      message: 'Voluptates aut eum.',
+    },
+  },
+  users: {
+    '5a6cf127c2b20834f6551481': {
+      email: 'Madisen_Braun@hotmail.com',
+      id: '5a6cf127c2b20834f6551481',
+      posts: [
+        '5a6cf127c2b20834f6551483',
+        '5a6cf127c2b20834f6551485',
+      ],
+    },
+    '5a6cf127c2b20834f6551482': {
+      email: 'Robel.Ansel@yahoo.com',
+      id: '5a6cf127c2b20834f6551482',
+      posts: [
+        '5a6cf127c2b20834f6551484',
+        '5a6cf127c2b20834f6551486',
+      ],
+    },
+  },
+}
+
 module.exports = {
   typeWithSameTypeFieldsConnections,
   allUsersConnections,
@@ -903,4 +1209,8 @@ module.exports = {
   emptyListAndObjectNormalized,
   jsonContent,
   jsonContentNormalized,
+  withJSONContentAndGraphQLConnections,
+  withJSONContentAndGraphQLConnectionsNormalized,
+  nestedAndJSONContent,
+  nestedAndJSONContentNormalized,
 }
