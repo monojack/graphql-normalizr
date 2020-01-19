@@ -10,7 +10,7 @@
     "javascript",
     "graphql",
     "normalizr",
-    "normalize"
+    "normalizer"
   ],
   "author": "Ionut Achim <achimvionut@gmail.com>",
   "license": "MIT",
