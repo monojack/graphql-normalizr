@@ -7,7 +7,7 @@
 
 Normalize GraphQL responses for persisting in the client cache/state.
 
-> Not related, in any way, to [normalizr](https://github.com/paularmstrong/normalizr), just shamelessly piggybacking on it's popularity. Also, "normaliz**E**r" is taken...
+> Not related, in any way, to [normalizr](https://github.com/paularmstrong/normalizr), just shamelessly piggybacking on its popularity. Also, "normaliz**E**r" is taken...
 
 **TL;DR**: Transforms:
 
@@ -571,7 +571,7 @@ print(query)
 
 ### `addRequiredFields`
 
-If you only have access to the **Document**, you can use the **print** method from `graphql` to get the **source** and parse it. But that may be expensive and you shouldn't have to print a document just to parse it again. `addRequiredFields` will add the `id` and `__typename` fields to that document, without the need of extracting it's source.
+If you only have access to the **Document**, you can use the **print** method from `graphql` to get the **source** and parse it. But that may be expensive and you shouldn't have to print a document just to parse it again. `addRequiredFields` will add the `id` and `__typename` fields to that document, without the need of extracting its source.
 
 ```js
 // ...
