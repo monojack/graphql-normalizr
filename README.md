@@ -1,6 +1,6 @@
 # **graphql-normalizr**
 
-[![Build Status](https://travis-ci.org/monojack/graphql-normalizr.svg?branch=master)](https://travis-ci.org/monojack/graphql-normalizr)
+![publish](https://github.com/monojack/graphql-normalizr/workflows/Publish/badge.svg)
 [![npm version](https://img.shields.io/npm/v/graphql-normalizr.svg)](https://www.npmjs.com/package/graphql-normalizr)
 [![npm downloads](https://img.shields.io/npm/dm/graphql-normalizr.svg)](https://www.npmjs.com/package/graphql-normalizr)
 [![minified size](https://badgen.net/bundlephobia/min/graphql-normalizr)](https://bundlephobia.com/result?p=graphql-normalizr@latest)
