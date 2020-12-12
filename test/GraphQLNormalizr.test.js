@@ -364,3 +364,63 @@ test('`normalize` with nested data and excluded JSON content', t => {
   const normalized = normalize({ data: nestedAndJSONContent, })
   t.deepEqual(normalized, nestedAndJSONContentNormalized)
 })
+
+test('`normalize` with excluded content and connections, regardless of field order', t => {
+  const notificationsConfig = {
+    close_open: {
+      email: true,
+    },
+  }
+  const groupLeaderOf = {
+    edges: [
+      {
+        node: {
+          id: '09fececa-8de3-4028-9802-42d069f1ff40',
+          __typename: 'group',
+        },
+      },
+    ],
+  }
+
+  const expected = {
+    user: {
+      '7fd6833d-aec8-4045-8097-2567db654710': {
+        id: '7fd6833d-aec8-4045-8097-2567db654710',
+        groupLeaderOf: [ '09fececa-8de3-4028-9802-42d069f1ff40', ],
+        notificationsConfig: { close_open: { email: true, }, }, },
+    },
+    group: {
+      '09fececa-8de3-4028-9802-42d069f1ff40': {
+        id: '09fececa-8de3-4028-9802-42d069f1ff40',
+      },
+    },
+  }
+
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+    plural: false,
+    exclude: { user: [ 'notificationsConfig', ], },
+  })
+
+  t.deepEqual(normalize({
+    data: {
+      user: {
+        __typename: 'user',
+        id: '7fd6833d-aec8-4045-8097-2567db654710',
+        notificationsConfig,
+        groupLeaderOf,
+      },
+    },
+  }), expected)
+
+  t.deepEqual(normalize({
+    data: {
+      user: {
+        __typename: 'user',
+        id: '7fd6833d-aec8-4045-8097-2567db654710',
+        groupLeaderOf,
+        notificationsConfig,
+      },
+    },
+  }), expected)
+})
