@@ -148,7 +148,7 @@ const normalizer = new GraphQLNormalizr(config)
 - [idKey](#idkey)
 - [useConnections](#useconnections)
 - [typeMap](#typemap)
-- [exclude](#exclude)
+- [ignore](#ignore)
 - [lists](#lists)
 - [typenames](#typenames)
 - [typePointers](#typepointers)
@@ -295,7 +295,7 @@ normalize(response)
 // }
 ```
 
-##### exclude
+##### ignore
 
 > Object
 
@@ -344,7 +344,7 @@ Normalize the data excluding the `preferences` field on `users` and the `tags` f
 
 ```js
 // using destructuring to get the `normalize` method of the client
-const { normalize } = new GraphQLNormalizr({ exclude: { users: [ 'preferences' ], blogPosts: [ 'tags' ] } })
+const { normalize } = new GraphQLNormalizr({ ignore: { users: [ 'preferences' ], blogPosts: [ 'tags' ] } })
 normalize(response)
 // =>
 // {

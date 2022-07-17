@@ -336,36 +336,36 @@ test('`normalize` with empty list', t => {
   t.deepEqual(normalized, emptyListAndObjectNormalized)
 })
 
-test('`normalize` with excluded JSON content', t => {
+test('`normalize` with ignored JSON content', t => {
   const { normalize, } = new GraphQLNormalizr({
-    exclude: { users: [ 'preferences', ], },
+    ignore: { users: [ 'preferences', ], },
   })
 
   const normalized = normalize({ data: jsonContent, })
   t.deepEqual(normalized, jsonContentNormalized)
 })
 
-test('`normalize` with connections and excluded JSON content', t => {
+test('`normalize` with connections and ignored JSON content', t => {
   const { normalize, } = new GraphQLNormalizr({
     useConnections: true,
     typePointers: true,
-    exclude: { movies: [ 'preferences', ], shows: [ 'preferences', ], },
+    ignore: { movies: [ 'preferences', ], shows: [ 'preferences', ], },
   })
 
   const normalized = normalize({ data: withJSONContentAndGraphQLConnections, })
   t.deepEqual(normalized, withJSONContentAndGraphQLConnectionsNormalized)
 })
 
-test('`normalize` with nested data and excluded JSON content', t => {
+test('`normalize` with nested data and ignored JSON content', t => {
   const { normalize, } = new GraphQLNormalizr({
-    exclude: { blogPosts: [ 'preferences', ], },
+    ignore: { blogPosts: [ 'preferences', ], },
   })
 
   const normalized = normalize({ data: nestedAndJSONContent, })
   t.deepEqual(normalized, nestedAndJSONContentNormalized)
 })
 
-test('`normalize` with excluded content and connections, regardless of field order', t => {
+test('`normalize` with ignored content and connections, regardless of field order', t => {
   const notificationsConfig = {
     close_open: {
       email: true,
@@ -399,7 +399,7 @@ test('`normalize` with excluded content and connections, regardless of field ord
   const { normalize, } = new GraphQLNormalizr({
     useConnections: true,
     plural: false,
-    exclude: { user: [ 'notificationsConfig', ], },
+    ignore: { user: [ 'notificationsConfig', ], },
   })
 
   t.deepEqual(normalize({
