@@ -16,6 +16,7 @@ const {
   noTypeNames,
   withScalarArrays,
   withScalarArraysConnections,
+  withScalarArraysConnectionsNodes,
   withMultipleTypesConnections,
   typeWithSameTypeFieldsConnections,
   useConnectionsGraphqlQuery,
@@ -131,6 +132,15 @@ test('snapshot :: `normalize` with graphql connections and scalar arrays', t => 
   })
   t.snapshot(normalize({ data: withScalarArraysConnections, }))
 })
+
+test("snapshot :: `normalize` with postgraphile connections and scalar arrays", (t) => {
+  const { normalize } = new GraphQLNormalizr({
+    useConnections: true,
+    useNodeConnections: true,
+  });
+  t.snapshot(normalize({ data: withScalarArraysConnectionsNodes }));
+});
+
 
 test('snapshot :: `normalize` with graphql connections and custom entity names', t => {
   const { normalize, } = new GraphQLNormalizr({

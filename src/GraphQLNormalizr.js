@@ -40,6 +40,7 @@ export function GraphQLNormalizr ({
   plural = true,
   casing = 'camel',
   useConnections = false,
+  useNodeConnections = false,
   typePointers = false,
   exclude,
   ignore
@@ -89,17 +90,21 @@ export function GraphQLNormalizr ({
       return {
         ...acc,
         [key]: isObject(value)
-          ? useConnections && value.hasOwnProperty('edges')
-            ? value.edges.map(mapper('node')).filter(isNotNil)
+          ? useConnections && value.hasOwnProperty("edges")
+            ? value.edges.map(mapper("node")).filter(isNotNil)
+            : useConnections &&
+              useNodeConnections &&
+              value.hasOwnProperty("nodes")
+            ? map(mapper())(value.nodes)
             : (() => {
-              const _v = prop(idKey)(value)
-              const { __typename, ..._value } = value
-              return _v == null ? (!typenames ? _value : value) : _v
-            })()
+                const _v = prop(idKey)(value);
+                const { __typename, ..._value } = value;
+                return _v == null ? (!typenames ? _value : value) : _v;
+              })()
           : isArray(value) && !value.every(isScalar)
-            ? map(mapper())(value)
-            : value,
-      }
+          ? map(mapper())(value)
+          : value,
+      };
     }, {})
     return res
   }
@@ -183,7 +188,7 @@ export function GraphQLNormalizr ({
 
   const isInlineFragment = node => node.kind === Kind.INLINE_FRAGMENT
 
-  const connectionFields = [ 'edges', 'pageInfo', ]
+  const connectionFields = [ 'edges', 'pageInfo', 'nodes']
 
   const excludeMetaFields = useConnections
     ? (node, key, parent, path) =>
