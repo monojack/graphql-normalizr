@@ -20,6 +20,8 @@ import {
 } from './utils'
 import { CACHE_READ_ERROR, CACHE_WRITE_ERROR, PAGEINFO_WITH_USE_CONNECTIONS_FALSE, } from './constants'
 
+const isProd = process?.env?.NODE_ENV === 'production'
+const warnings = {}
 const casingMethodMap = {
   lower: toLower,
   upper: toUpper,
@@ -39,8 +41,15 @@ export function GraphQLNormalizr ({
   casing = 'camel',
   useConnections = false,
   typePointers = false,
-  exclude = {},
+  exclude,
+  ignore
 } = {}) {
+  if(!isProd && !warnings.excludeDeprecation && exclude) {
+    warnings.excludeDeprecation = true
+    console.warn('[GraphQLNormalizr]: The `exclude` option is deprecated and may be removed in the future,\nplease use `ignore` instead.\n(see https://github.com/monojack/graphql-normalizr/issues/38)')
+  }
+  ignore = ignore || exclude || {}
+
   const hasIdField = hasField(idKey)
   const hasTypeNameField = hasField('__typename')
   const hasEdgesField = hasField('edges')
@@ -114,7 +123,6 @@ export function GraphQLNormalizr ({
   function normalize ({ data, }) {
     const paths = {}
     const entities = {}
-    const stack = {}
     let normalized = {}
 
     try {
@@ -124,38 +132,37 @@ export function GraphQLNormalizr ({
         return cached
       }
     } catch (e) {
-      // eslint-disable-next-line
-      process.env.NODE_ENV !== 'production' && console.warn(CACHE_READ_ERROR)
+      !isProd && console.warn(CACHE_READ_ERROR)
     }
 
-    let warned = false
-    ;(function walk (root, path = '') {
+    ;(function walk (root, path = '', stackEntity, stackValue) {
       if (root && Object.prototype.hasOwnProperty.call(root, 'pageInfo') && !useConnections) {
-        process.env.NODE_ENV !== 'production' &&
-          !warned &&
-          // eslint-disable-next-line
+        if(!isProd && !warnings.pageInfoNoConnections) {
           console.warn(PAGEINFO_WITH_USE_CONNECTIONS_FALSE)
-        warned = true
+          warnings.pageInfoNoConnections = true
+        }
       }
 
       for (const [ key, value, ] of Object.entries(root)) {
         if (useConnections && !isNil(value) && value.hasOwnProperty('edges')) {
-          walk(value.edges, `${path ? `${path}.` : ``}${key}.edges`)
+          value.edges.forEach((edge, i) => {
+            if (edge && edge.node) {
+              walk({ node: edge.node, }, `${path ? `${path}.` : ``}${key}.edges.${i}`)
+            }
+          })
         } else if ((isObject(value) || isArray(value)) && isEmpty(value)) {
           paths[path] = { done: true, }
         } else if (isObject(value) || (isArray(value) && !value.every(isScalar))) {
-          if (exclude[stack.entity] && exclude[stack.entity].includes(key)) {
+          if (ignore[stackEntity] && ignore[stackEntity].includes(key)) {
             paths[path] = { done: true, }
           } else {
             const type = value.__typename
             type && (entities[type] = getEntityName(type, entities))
-            stack.value = value
-            stack.entity = entities[type]
-            walk(value, `${path ? `${path}.` : ``}${key}`)
-           }
+            walk(value, `${path ? `${path}.` : ``}${key}`, entities[type], value)
+          }
         } else {
           if (!paths[path] && isNotNil(value)) {
-            assoc(stack.entity, mapNestedValue(stack.value), normalized)
+            assoc(stackEntity, mapNestedValue(stackValue), normalized)
             paths[path] = { done: true, }
           }
         }
@@ -166,7 +173,7 @@ export function GraphQLNormalizr ({
       caching && cache.set(JSON.stringify(data), normalized)
     } catch (e) {
       // eslint-disable-next-line
-      process.env.NODE_ENV !== 'production' && console.warn(CACHE_WRITE_ERROR)
+      !isProd && console.warn(CACHE_WRITE_ERROR)
     }
 
     normalized = lists ? toLists(normalized) : normalized

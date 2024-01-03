@@ -1,5 +1,4 @@
 const babel = require('rollup-plugin-babel')
-const { sizeSnapshot, } = require('rollup-plugin-size-snapshot')
 const pkg = require('./package.json')
 
 const input = './src/index.js'
@@ -19,5 +18,5 @@ module.exports = {
   },
   treeshake: true,
   external: Object.keys(globals),
-  plugins: [ babel(babelOpts), sizeSnapshot(), ],
+  plugins: [ babel(babelOpts), ],
 }

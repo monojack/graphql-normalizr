@@ -1,6 +1,6 @@
 {
   "name": "graphql-normalizr",
-  "version": "2.9.0",
+  "version": "2.10.3",
   "description": "Normalize GraphQL response",
   "repository": {
     "type": "git",
@@ -10,33 +10,33 @@
     "javascript",
     "graphql",
     "normalizr",
-    "normalize"
+    "normalizer"
   ],
   "author": "Ionut Achim <achimvionut@gmail.com>",
   "license": "MIT",
   "main": "lib/graphql-normalizr.cjs.js",
   "module": "esm/graphql-normalizr.esm.js",
   "devDependencies": {
-    "@babel/core": "^7.5.4",
-    "@babel/plugin-proposal-object-rest-spread": "^7.5.4",
-    "@babel/preset-env": "^7.5.4",
-    "ava": "^2.2.0",
-    "eslint": "^5.16.0",
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
+    "@babel/preset-env": "^7.12.10",
+    "ava": "^3.14.0",
+    "eslint": "^7.15.0",
     "eslint-config-mono": "^2.0.0",
-    "graphql": "^14.4.2",
-    "graphql-tag": "^2.10.1",
-    "rollup": "^1.16.7",
-    "rollup-plugin-babel": "^4.3.3",
+    "graphql": "^15.4.0",
+    "graphql-tag": "^2.11.0",
+    "rollup": "^2.34.2",
+    "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-replace": "^2.2.0",
-    "rollup-plugin-size-snapshot": "^0.9.0",
-    "rollup-plugin-terser": "^5.1.1"
+    "rollup-plugin-size-snapshot": "^0.12.0",
+    "rollup-plugin-terser": "^7.0.2"
   },
   "bugs": {
     "url": "https://github.com/monojack/graphql-normalizr/issues"
   },
   "peerDependencies": {
-    "graphql": "^0.11.* || ^0.12.* || ^0.13.* || ^0.14.* || ^14.*"
+    "graphql": "^0.11.* || ^0.12.* || ^0.13.* || ^0.14.* || ^14.* || ^15.*"
   },
   "scripts": {
     "rollup": "rollup -c",

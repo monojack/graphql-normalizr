@@ -27,6 +27,10 @@ const {
   emptyListAndObjectNormalized,
   jsonContent,
   jsonContentNormalized,
+  withJSONContentAndGraphQLConnections,
+  withJSONContentAndGraphQLConnectionsNormalized,
+  nestedAndJSONContent,
+  nestedAndJSONContentNormalized,
 } = require('./mocks/data')
 
 test('GraphQLNormalizr returns an object with `normalize`, `parse` and `addRequiredFields` methdos', t => {
@@ -332,11 +336,91 @@ test('`normalize` with empty list', t => {
   t.deepEqual(normalized, emptyListAndObjectNormalized)
 })
 
-test('`normalize` with excluded JSON content', t => {
+test('`normalize` with ignored JSON content', t => {
   const { normalize, } = new GraphQLNormalizr({
-    exclude: { users: [ 'preferences', ], },
+    ignore: { users: [ 'preferences', ], },
   })
 
   const normalized = normalize({ data: jsonContent, })
   t.deepEqual(normalized, jsonContentNormalized)
+})
+
+test('`normalize` with connections and ignored JSON content', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+    typePointers: true,
+    ignore: { movies: [ 'preferences', ], shows: [ 'preferences', ], },
+  })
+
+  const normalized = normalize({ data: withJSONContentAndGraphQLConnections, })
+  t.deepEqual(normalized, withJSONContentAndGraphQLConnectionsNormalized)
+})
+
+test('`normalize` with nested data and ignored JSON content', t => {
+  const { normalize, } = new GraphQLNormalizr({
+    ignore: { blogPosts: [ 'preferences', ], },
+  })
+
+  const normalized = normalize({ data: nestedAndJSONContent, })
+  t.deepEqual(normalized, nestedAndJSONContentNormalized)
+})
+
+test('`normalize` with ignored content and connections, regardless of field order', t => {
+  const notificationsConfig = {
+    close_open: {
+      email: true,
+    },
+  }
+  const groupLeaderOf = {
+    edges: [
+      {
+        node: {
+          id: '09fececa-8de3-4028-9802-42d069f1ff40',
+          __typename: 'group',
+        },
+      },
+    ],
+  }
+
+  const expected = {
+    user: {
+      '7fd6833d-aec8-4045-8097-2567db654710': {
+        id: '7fd6833d-aec8-4045-8097-2567db654710',
+        groupLeaderOf: [ '09fececa-8de3-4028-9802-42d069f1ff40', ],
+        notificationsConfig: { close_open: { email: true, }, }, },
+    },
+    group: {
+      '09fececa-8de3-4028-9802-42d069f1ff40': {
+        id: '09fececa-8de3-4028-9802-42d069f1ff40',
+      },
+    },
+  }
+
+  const { normalize, } = new GraphQLNormalizr({
+    useConnections: true,
+    plural: false,
+    ignore: { user: [ 'notificationsConfig', ], },
+  })
+
+  t.deepEqual(normalize({
+    data: {
+      user: {
+        __typename: 'user',
+        id: '7fd6833d-aec8-4045-8097-2567db654710',
+        notificationsConfig,
+        groupLeaderOf,
+      },
+    },
+  }), expected)
+
+  t.deepEqual(normalize({
+    data: {
+      user: {
+        __typename: 'user',
+        id: '7fd6833d-aec8-4045-8097-2567db654710',
+        groupLeaderOf,
+        notificationsConfig,
+      },
+    },
+  }), expected)
 })
